@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AV Dashboard Admin — ZDC 2026 Fall</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; background: #f0f2f5; color: #1a1a2e; }
+
+  /* HEADER */
+  .page-header { background: #1e2761; color: #fff; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; }
+  .page-header p { font-size: 12px; color: #c8cfe8; margin-top: 2px; }
+  .header-links { display: flex; gap: 10px; }
+  .header-links a { font-size: 12px; color: #a5b4fc; text-decoration: none; padding: 4px 10px; border: 1px solid #3d4a8a; border-radius: 4px; white-space: nowrap; }
+  .header-links a:hover { background: #2e3a8a; }
+
+  /* TOKEN GATE */
+  #token-gate { max-width: 480px; margin: 60px auto; background: #fff; border: 1px solid #d0d5e8; border-radius: 8px; padding: 32px; text-align: center; }
+  #token-gate h2 { font-size: 16px; color: #1e2761; margin-bottom: 8px; }
+  #token-gate p { font-size: 12px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+  #token-gate input { width: 100%; padding: 9px 12px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 13px; font-family: monospace; margin-bottom: 12px; }
+  #token-gate input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; }
+  .token-hint { font-size: 11px; color: #888; margin-top: 8px; }
+  .token-hint a { color: #3b82d4; }
+
+  /* MAIN */
+  .main { max-width: 860px; margin: 24px auto; padding: 0 20px 60px; }
+
+  /* STATUS BAR */
+  #status-bar { padding: 10px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; display: none; }
+  #status-bar.loading { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: block; }
+  #status-bar.success { background: #f0fdf4; border: 1px solid #86efac; color: #166534; display: block; }
+  #status-bar.error   { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; display: block; }
+  #status-bar.info    { background: #f8fafc; border: 1px solid #cbd5e1; color: #475569; display: block; }
+
+  /* DAY GROUPS */
+  .day-group { margin-bottom: 24px; }
+  .day-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #fff; background: #1e2761; padding: 5px 12px; border-radius: 4px 4px 0 0; }
+
+  /* SESSION ROWS */
+  .session-row { background: #fff; border: 1px solid #d8dce8; border-top: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .session-row:last-child { border-radius: 0 0 4px 4px; }
+  .session-row:hover { background: #f7f8ff; }
+  .session-info { flex: 1; min-width: 0; }
+  .session-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .session-type-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+  .url-input { flex: 2; min-width: 0; }
+  .url-input input { width: 100%; padding: 7px 10px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #1a1a2e; background: #f9fafb; }
+  .url-input input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; background: #fff; }
+  .url-input input.has-url { border-color: #86efac; background: #f0fdf4; }
+  .url-input input.has-url:focus { background: #fff; }
+  .status-icon { width: 28px; text-align: center; font-size: 16px; flex-shrink: 0; }
+
+  /* ACTIONS */
+  .actions { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .btn { padding: 8px 18px; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; white-space: nowrap; }
+  .btn-primary { background: #1d4ed8; color: #fff; }
+  .btn-primary:hover { background: #1e40af; }
+  .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+  .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+  .btn-secondary:hover { background: #e2e8f0; }
+  .save-note { font-size: 11px; color: #888; }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 16px; font-size: 11px; color: #666; margin-bottom: 16px; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+
+  footer { text-align: center; font-size: 11px; color: #888; border-top: 1px solid #dde0ea; padding: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>AV Dashboard Admin — ZDC 2026 Fall</h1>
+    <p>Manage presentation deck links · changes publish live to the dashboard within ~30 seconds</p>
+  </div>
+  <div class="header-links">
+    <a href="index.html" target="_blank">↗ View Dashboard</a>
+    <a href="https://github.com/ibmzdc/av-dashboard-2026/commits/main/av-files.json" target="_blank">↗ Edit History</a>
+  </div>
+</div>
+
+<!-- TOKEN GATE -->
+<div id="token-gate">
+  <h2>GitHub Personal Access Token</h2>
+  <p>Enter your GitHub token to load and save deck links.<br>Your token is used only in this browser session and never stored.</p>
+  <input type="password" id="token-input" placeholder="github_pat_..." autocomplete="off" />
+  <button class="btn btn-primary" style="width:100%" onclick="initWithToken()">Connect</button>
+  <p class="token-hint">
+    Need a token? <a href="https://github.com/settings/tokens/new?description=AV+Dashboard+Admin&scopes=repo" target="_blank">Create one here</a>
+    — select scope: <strong>repo</strong> (or <strong>public_repo</strong> for public repos)
+  </p>
+</div>
+
+<!-- ADMIN UI (hidden until token entered) -->
+<div class="main" id="admin-ui" style="display:none">
+
+  <div id="status-bar"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="save-btn" onclick="saveAll()" disabled>💾 Save &amp; Publish</button>
+    <button class="btn btn-secondary" onclick="loadData()">↺ Reload from GitHub</button>
+    <span class="save-note">Saves av-files.json to GitHub · dashboard updates within ~30s</span>
+  </div>
+
+  <div class="legend">
+    <span>✅ Deck linked</span>
+    <span>⏳ Pending (no URL yet)</span>
+  </div>
+
+  <div id="sessions-container"></div>
+
+</div>
+
+<footer>ZDC 2026 Fall — AV Dashboard Admin — ibmzdc/av-dashboard-2026</footer>
+
+<script>
+var REPO   = 'ibmzdc/av-dashboard-2026';
+var FILE   = 'av-files.json';
+var API    = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
+var RAW    = 'https://raw.githubusercontent.com/' + REPO + '/main/' + FILE;
+
+var token  = '';
+var fileSha = '';
+var jsonData = null;
+
+var DAY_ORDER = ['Sunday','Monday','Tuesday','Wednesday','Thursday'];
+
+// ── Token gate ────────────────────────────────────────────────────────────────
+document.getElementById('token-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') initWithToken();
+});
+
+function initWithToken() {
+  var t = document.getElementById('token-input').value.trim();
+  if (!t) { alert('Please enter a GitHub token.'); return; }
+  token = t;
+  document.getElementById('token-gate').style.display = 'none';
+  document.getElementById('admin-ui').style.display = 'block';
+  loadData();
+}
+
+// ── Load data from GitHub ─────────────────────────────────────────────────────
+function loadData() {
+  setStatus('loading', 'Loading av-files.json from GitHub…');
+  document.getElementById('save-btn').disabled = true;
+
+  fetch(API, { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } })
+    .then(function(r) {
+      if (r.status === 401) throw new Error('Invalid token — please refresh and re-enter your token.');
+      if (!r.ok) throw new Error('GitHub API error: ' + r.status);
+      return r.json();
+    })
+    .then(function(meta) {
+      fileSha = meta.sha;
+      var content = atob(meta.content.replace(/\n/g,''));
+      jsonData = JSON.parse(content);
+      renderSessions(jsonData.sessions);
+      var linked = Object.values(jsonData.sessions).filter(function(s){ return s.url && s.url.trim(); }).length;
+      setStatus('info', '✓ Loaded — ' + linked + ' of ' + Object.keys(jsonData.sessions).length + ' decks linked  ·  Last saved: ' + (jsonData._updated || 'unknown'));
+      document.getElementById('save-btn').disabled = false;
+    })
+    .catch(function(err) {
+      setStatus('error', '✗ ' + err.message);
+    });
+}
+
+// ── Render session rows grouped by day ───────────────────────────────────────
+function renderSessions(sessions) {
+  var container = document.getElementById('sessions-container');
+  container.innerHTML = '';
+
+  var byDay = {};
+  DAY_ORDER.forEach(function(d) { byDay[d] = []; });
+  Object.keys(sessions).forEach(function(key) {
+    var s = sessions[key];
+    var day = s.day || 'Other';
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(key);
+  });
+
+  DAY_ORDER.forEach(function(day) {
+    var keys = byDay[day];
+    if (!keys || keys.length === 0) return;
+
+    var group = document.createElement('div');
+    group.className = 'day-group';
+
+    var label = document.createElement('div');
+    label.className = 'day-label';
+    label.textContent = day;
+    group.appendChild(label);
+
+    keys.forEach(function(key) {
+      var s = sessions[key];
+      var hasUrl = s.url && s.url.trim() !== '';
+
+      var row = document.createElement('div');
+      row.className = 'session-row';
+
+      var icon = document.createElement('div');
+      icon.className = 'status-icon';
+      icon.textContent = hasUrl ? '✅' : '⏳';
+
+      var info = document.createElement('div');
+      info.className = 'session-info';
+      info.innerHTML = '<div class="session-title" title="' + escHtml(key) + '">' + escHtml(key) + '</div>';
+
+      var urlWrap = document.createElement('div');
+      urlWrap.className = 'url-input';
+
+      var input = document.createElement('input');
+      input.type = 'url';
+      input.placeholder = 'Paste Box shared link here…';
+      input.value = s.url || '';
+      input.dataset.key = key;
+      if (hasUrl) input.classList.add('has-url');
+
+      input.addEventListener('input', function() {
+        var filled = this.value.trim() !== '';
+        this.classList.toggle('has-url', filled);
+        icon.textContent = filled ? '✅' : '⏳';
+        markDirty();
+      });
+
+      urlWrap.appendChild(input);
+      row.appendChild(icon);
+      row.appendChild(info);
+      row.appendChild(urlWrap);
+      group.appendChild(row);
+    });
+
+    container.appendChild(group);
+  });
+}
+
+// ── Mark form dirty ───────────────────────────────────────────────────────────
+var isDirty = false;
+function markDirty() {
+  if (!isDirty) {
+    isDirty = true;
+    setStatus('info', '● Unsaved changes — click Save & Publish when ready');
+  }
+}
+
+// ── Collect current values from form ─────────────────────────────────────────
+function collectValues() {
+  document.querySelectorAll('.url-input input').forEach(function(input) {
+    var key = input.dataset.key;
+    if (jsonData.sessions[key]) {
+      jsonData.sessions[key].url = input.value.trim();
+    }
+  });
+}
+
+// ── Save to GitHub ────────────────────────────────────────────────────────────
+function saveAll() {
+  collectValues();
+
+  var today = new Date();
+  var mm = String(today.getMonth()+1).padStart(2,'0');
+  var dd = String(today.getDate()).padStart(2,'0');
+  jsonData._updated = today.getFullYear() + '-' + mm + '-' + dd;
+
+  var linked = Object.values(jsonData.sessions).filter(function(s){ return s.url && s.url.trim(); }).length;
+  var total  = Object.keys(jsonData.sessions).length;
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2))));
+  var message = 'Update deck links: ' + linked + '/' + total + ' linked (' + jsonData._updated + ')';
+
+  setStatus('loading', 'Saving to GitHub…');
+  document.getElementById('save-btn').disabled = true;
+
+  fetch(API, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: message, content: content, sha: fileSha })
+  })
+  .then(function(r) {
+    if (r.status === 401) throw new Error('Token expired or lacks write access.');
+    if (!r.ok) return r.json().then(function(e){ throw new Error(e.message || ('GitHub error ' + r.status)); });
+    return r.json();
+  })
+  .then(function(data) {
+    fileSha = data.content.sha;
+    isDirty = false;
+    setStatus('success', '✓ Saved — ' + linked + ' of ' + total + ' decks linked · Dashboard will update within ~30 seconds');
+    document.getElementById('save-btn').disabled = false;
+  })
+  .catch(function(err) {
+    setStatus('error', '✗ Save failed: ' + err.message);
+    document.getElementById('save-btn').disabled = false;
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function setStatus(cls, msg) {
+  var bar = document.getElementById('status-bar');
+  bar.className = cls;
+  bar.textContent = msg;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.addEventListener('beforeunload', function(e) {
+  if (isDirty) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+</script>
+
+</body>
+</html>
