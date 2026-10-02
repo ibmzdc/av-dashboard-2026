@@ -20,10 +20,14 @@
   #token-gate { max-width: 480px; margin: 60px auto; background: #fff; border: 1px solid #d0d5e8; border-radius: 8px; padding: 32px; text-align: center; }
   #token-gate h2 { font-size: 16px; color: #1e2761; margin-bottom: 8px; }
   #token-gate p { font-size: 12px; color: #666; margin-bottom: 20px; line-height: 1.6; }
-  #token-gate input { width: 100%; padding: 9px 12px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 13px; font-family: monospace; margin-bottom: 12px; }
-  #token-gate input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; }
+  #token-gate input[type=password] { width: 100%; padding: 9px 12px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 13px; font-family: monospace; margin-bottom: 12px; }
+  #token-gate input[type=password]:focus { outline: 2px solid #3b82d4; outline-offset: 1px; }
+  .remember-row { display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 14px; font-size: 12px; color: #555; cursor: pointer; }
+  .remember-row input[type=checkbox] { width: 15px; height: 15px; cursor: pointer; accent-color: #1d4ed8; }
   .token-hint { font-size: 11px; color: #888; margin-top: 8px; }
   .token-hint a { color: #3b82d4; }
+  .forget-link { font-size: 11px; color: #f87171; text-decoration: none; padding: 3px 8px; border: 1px solid #fca5a5; border-radius: 4px; }
+  .forget-link:hover { background: #fef2f2; }
 
   /* MAIN */
   .main { max-width: 960px; margin: 24px auto; padding: 0 20px 60px; }
@@ -93,14 +97,19 @@
   <div class="header-links">
     <a href="index.html" target="_blank">↗ View Dashboard</a>
     <a href="https://github.com/ibmzdc/av-dashboard-2026/commits/main/av-files.json" target="_blank">↗ Edit History</a>
+    <a href="#" class="forget-link" id="forget-btn" style="display:none" onclick="forgetToken();return false;">✕ Forget token</a>
   </div>
 </div>
 
 <!-- TOKEN GATE -->
 <div id="token-gate">
   <h2>GitHub Personal Access Token</h2>
-  <p>Enter your GitHub token to load and save deck links.<br>Your token is used only in this browser session and never stored.</p>
+  <p>Enter your GitHub token to load and save deck links.</p>
   <input type="password" id="token-input" placeholder="github_pat_..." autocomplete="off" />
+  <label class="remember-row">
+    <input type="checkbox" id="remember-token" checked />
+    Remember on this device
+  </label>
   <button class="btn btn-primary" style="width:100%" onclick="initWithToken()">Connect</button>
   <p class="token-hint">
     Need a token? <a href="https://github.com/settings/tokens/new?description=AV+Dashboard+Admin&scopes=repo" target="_blank">Create one here</a>
@@ -144,6 +153,8 @@ var jsonData = null;
 var DAY_ORDER = ['Sunday','Monday','Tuesday','Wednesday','Thursday'];
 
 // ── Token gate ────────────────────────────────────────────────────────────────
+var STORAGE_KEY = 'zdc_av_admin_token';
+
 document.getElementById('token-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') initWithToken();
 });
@@ -152,10 +163,39 @@ function initWithToken() {
   var t = document.getElementById('token-input').value.trim();
   if (!t) { alert('Please enter a GitHub token.'); return; }
   token = t;
+  if (document.getElementById('remember-token').checked) {
+    try { localStorage.setItem(STORAGE_KEY, t); } catch(e) {}
+  }
+  showAdminUI();
+}
+
+function showAdminUI() {
   document.getElementById('token-gate').style.display = 'none';
   document.getElementById('admin-ui').style.display = 'block';
+  document.getElementById('forget-btn').style.display = 'inline-block';
   loadData();
 }
+
+function forgetToken() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  token = '';
+  document.getElementById('token-input').value = '';
+  document.getElementById('admin-ui').style.display = 'none';
+  document.getElementById('forget-btn').style.display = 'none';
+  document.getElementById('token-gate').style.display = 'block';
+}
+
+// Auto-connect if token is saved
+(function() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      token = saved;
+      document.getElementById('token-input').value = saved;
+      showAdminUI();
+    }
+  } catch(e) {}
+})();
 
 // ── Load data from GitHub ─────────────────────────────────────────────────────
 function loadData() {
