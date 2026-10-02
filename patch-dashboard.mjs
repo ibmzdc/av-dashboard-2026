@@ -5,9 +5,10 @@
  * Run this after every AV Dashboard regeneration.
  * It takes the freshly generated HTML from Generated-Outputs/ and patches in
  * all GitHub-specific additions that must survive regeneration:
- *   1. CSS — badge-redownload, pulse-orange, Always-On panel styles
+ *   1. CSS — badge-redownload, pulse-orange, audio-cell, badge-xlr, Always-On panel styles
  *   2. HTML — Always-On Assets panel (pinned above summary bar)
- *   3. Script — AV_FILES_URL, deckHTML(), injectDeckLinks() with always_on support
+ *   3. Table — col-audio column added to all colgroups, theads, and tbody rows
+ *   4. Script — AV_FILES_URL, deckHTML(), injectDeckLinks() with audio cell + always_on support
  *
  * Output: GitHub/av-dashboard-2026/index.html (ready to push)
  *
@@ -51,8 +52,10 @@ const CSS_INSERT = `
   .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
   @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-  /* XLR FEED BADGE */
-  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #991b1b; white-space: nowrap; }
+  /* AUDIO CELL */
+  col.col-audio { width: 90px; }
+  .audio-cell { text-align: center; vertical-align: middle !important; }
+  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; white-space: nowrap; }
 
   /* DECK BTNS */
   .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -112,7 +115,26 @@ if (!html.includes('always-on-panel')) {
   console.log('⏭  Always-On HTML already present — skipped');
 }
 
-// ── 3. Script patch — replace existing <script> block ────────────────────────
+// ── 3. Table patch — add Audio column to all colgroups, theads, tbody rows ───
+if (!html.includes('col-audio')) {
+  // Add col-audio before col-deck in all colgroups
+  html = html.replace(/<col class="col-timer"><col class="col-monitor"><col class="col-deck">/g,
+    '<col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">');
+  // Add Audio header before Deck header in all theads
+  html = html.replace(/<th>Monitor \/ Display<\/th><th>Deck<\/th>/g,
+    '<th>Monitor / Display</th><th>Audio</th><th>Deck</th>');
+  // Add audio-cell (keyed) before keyed deck-cell in every AV-tracked row
+  html = html.replace(/<td class="deck-cell" data-session-key="([^"]+)">(<span[^>]+>[^<]*<\/span>)<\/td>/g,
+    (m, key, inner) => `<td class="audio-cell" data-session-key="${key}"></td>\n        <td class="deck-cell" data-session-key="${key}">${inner}</td>`);
+  // Add blank audio-cell before deck-na cells in all other rows
+  html = html.replace(/<td class="deck-cell"><span class="deck-na">—<\/span><\/td>/g,
+    '<td class="audio-cell"></td>\n        <td class="deck-cell"><span class="deck-na">—</span></td>');
+  console.log('✅  Audio column patched into all tables');
+} else {
+  console.log('⏭  Audio column already present — skipped');
+}
+
+// ── 4. Script patch — replace existing <script> block ────────────────────────
 const SCRIPT_OPEN  = '<script>';
 const SCRIPT_CLOSE = '</script>';
 
@@ -127,7 +149,6 @@ function deckHTML(entry) {
   if (entry && entry.url && entry.url.trim() !== '') {
     var html = '<div class="deck-btns"><a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
     if (entry.redownload) html += '<span class="badge-redownload">&#8635; Re-download!</span>';
-    if (entry.xlr_feed) html += '<span class="badge-xlr">&#127908; XLR Feed</span>';
     html += '</div>';
     return html;
   }
@@ -142,6 +163,14 @@ function injectDeckLinks(sessions, alwaysOn) {
     tmp.innerHTML = key;
     var entry = sessions[tmp.value];
     cell.innerHTML = deckHTML(entry);
+  });
+  // Audio cells — show XLR Feed badge when xlr_feed is true, blank otherwise
+  document.querySelectorAll('td.audio-cell[data-session-key]').forEach(function(cell) {
+    var key = cell.getAttribute('data-session-key');
+    var tmp = document.createElement('textarea');
+    tmp.innerHTML = key;
+    var entry = sessions[tmp.value];
+    cell.innerHTML = (entry && entry.xlr_feed) ? '<span class="badge-xlr">&#127908; XLR Feed</span>' : '';
   });
   // Always-On panel
   var aoAssets = alwaysOn || {};
