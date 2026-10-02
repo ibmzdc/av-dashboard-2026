@@ -4,26 +4,26 @@
     "",
     "When a presentation deck is ready:",
     "  1. Upload the file (PPT or PDF) to Box",
-    "  2. Right-click â Share â Copy Shared Link",
+    "  2. Right-click Ã¢ÂÂ Share Ã¢ÂÂ Copy Shared Link",
     "  3. Open admin.html, paste the link into the matching session, click Save & Publish",
-    "  4. The dashboard updates live within ~30 seconds â no other changes needed",
+    "  4. The dashboard updates live within ~30 seconds Ã¢ÂÂ no other changes needed",
     "",
     "To flag a re-download (file was replaced/updated):",
-    "  â¢ In admin.html, toggle 'Re-download required' for that session â Save & Publish",
-    "  â¢ The dashboard will show a pulsing orange badge next to the Download button",
-    "  â¢ Once the AV team has re-downloaded, toggle it off â Save & Publish",
+    "  Ã¢ÂÂ¢ In admin.html, toggle 'Re-download required' for that session Ã¢ÂÂ Save & Publish",
+    "  Ã¢ÂÂ¢ The dashboard will show a pulsing orange badge next to the Download button",
+    "  Ã¢ÂÂ¢ Once the AV team has re-downloaded, toggle it off Ã¢ÂÂ Save & Publish",
     "",
     "To flag XLR audio feed required:",
-    "  â¢ In admin.html, toggle 'XLR Feed' for that session â Save & Publish",
-    "  â¢ The dashboard will show a red ð XLR Feed badge on that session row",
-    "  â¢ IBM-provided ZOOM recorder must be connected via XLR for audio capture",
+    "  Ã¢ÂÂ¢ In admin.html, toggle 'XLR Feed' for that session Ã¢ÂÂ Save & Publish",
+    "  Ã¢ÂÂ¢ The dashboard will show a red Ã°ÂÂÂ XLR Feed badge on that session row",
+    "  Ã¢ÂÂ¢ IBM-provided ZOOM recorder must be connected via XLR for audio capture",
     "",
     "Fields per session:",
-    "  url        â Box shared link (empty = not yet available)",
-    "  redownload â true = AV team needs to re-download this file",
-    "  xlr_feed   â true = XLR audio feed required (connect ZOOM recorder)",
-    "  label      â display name (do not change)",
-    "  day        â used for grouping (do not change)",
+    "  url        Ã¢ÂÂ Box shared link (empty = not yet available)",
+    "  redownload Ã¢ÂÂ true = AV team needs to re-download this file",
+    "  xlr_feed   Ã¢ÂÂ true = XLR audio feed required (connect ZOOM recorder)",
+    "  label      Ã¢ÂÂ display name (do not change)",
+    "  day        Ã¢ÂÂ used for grouping (do not change)",
     "",
     "Dashboard URL: https://ibmzdc.github.io/av-dashboard-2026/",
     "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
@@ -71,7 +71,7 @@
     "AI on IBM Z: From Transactional Intelligence to Agentic Workflows": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "AI on IBM Z: From Transactional Intelligence to Agentic Workflows",
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
@@ -161,7 +161,7 @@
     "Generic Data Architecture, Data Discovery on Z": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Generic Data Architecture, Data Discovery on Z",
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
@@ -171,7 +171,7 @@
     "The Frontier Model Era: Transforming the IBM Z Security Landscape": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "The Frontier Model Era: Transforming the IBM Z Security Landscape",
       "day": "Monday",
       "room": "Teun",
@@ -208,11 +208,11 @@
       "session_type": "Z Design Fair",
       "proj_type": "Design Fair Station"
     },
-    "Software Management-as-Code — IBM Z Install": {
+    "Software Management-as-Code â IBM Z Install": {
       "url": "",
       "redownload": false,
       "xlr_feed": false,
-      "label": "Software Management-as-Code — IBM Z Install",
+      "label": "Software Management-as-Code â IBM Z Install",
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
@@ -258,11 +258,11 @@
       "session_type": "Z Design Fair",
       "proj_type": "Design Fair Station"
     },
-    "Opening Keynote — Designing the Future of Computing": {
+    "Opening Keynote â Designing the Future of Computing": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
-      "label": "Opening Keynote — Designing the Future of Computing",
+      "xlr_feed": true,
+      "label": "Opening Keynote â Designing the Future of Computing",
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
@@ -271,7 +271,7 @@
     "Continuing IBM Z Full-Stack Simplification": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Continuing IBM Z Full-Stack Simplification",
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
@@ -281,7 +281,7 @@
     "Reimagining Mainframe Engineering Across the Stack": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Reimagining Mainframe Engineering Across the Stack",
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
@@ -291,7 +291,7 @@
     "Managing my Db2 & IMS Systems with Z Database Assistant": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Managing my Db2 & IMS Systems with Z Database Assistant",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -301,7 +301,7 @@
     "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -311,7 +311,7 @@
     "Project Polaris Roadmap: Leading to the z/OS Next GA Experience": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Project Polaris Roadmap: Leading to the z/OS Next GA Experience",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -321,7 +321,7 @@
     "Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS",
       "day": "Wednesday",
       "room": "Teun",
@@ -331,7 +331,7 @@
     "Z Database Assistant Update and Journey": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Z Database Assistant Update and Journey",
       "day": "Wednesday",
       "room": "Sancy",
@@ -341,7 +341,7 @@
     "Part 1: IBM Z Security Transformation": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Part 1: IBM Z Security Transformation",
       "day": "Wednesday",
       "room": "Tiffany/Shah",
@@ -351,7 +351,7 @@
     "The Geometry of Intelligence": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "The Geometry of Intelligence",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -361,7 +361,7 @@
     "Expedite Problem Diagnosis in Z Operations": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Expedite Problem Diagnosis in Z Operations",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -371,7 +371,7 @@
     "Unlocking IBM Z Data for AI and Real-Time Decisioning": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Unlocking IBM Z Data for AI and Real-Time Decisioning",
       "day": "Wednesday",
       "room": "Sancy",
@@ -381,7 +381,7 @@
     "Advancing Agentic AI Governance with Security, Traceability, and Transparency": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Advancing Agentic AI Governance with Security, Traceability, and Transparency",
       "day": "Wednesday",
       "room": "Teun",
@@ -391,7 +391,7 @@
     "Part 2: New Product Innovation in IBM Z Security SW": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Part 2: New Product Innovation in IBM Z Security SW",
       "day": "Wednesday",
       "room": "Tiffany/Shah",
@@ -401,7 +401,7 @@
     "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment",
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
@@ -411,7 +411,7 @@
     "How IBM Bob Is Changing the Game for Mainframe Developers": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "How IBM Bob Is Changing the Game for Mainframe Developers",
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
@@ -421,7 +421,7 @@
     "Collaborative Session Playbacks (Round 1)": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Collaborative Session Playbacks (Round 1)",
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
@@ -431,7 +431,7 @@
     "Collaborative Session Playbacks (Round 2)": {
       "url": "",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Collaborative Session Playbacks (Round 2)",
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
