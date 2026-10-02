@@ -48,6 +48,7 @@
   .session-row:last-child { border-radius: 0 0 4px 4px; }
   .session-row:hover { background: #f7f8ff; }
   .session-row.redownload-on { background: #fff8f0; border-left: 3px solid #f97316; }
+  .session-row.xlr-on { border-right: 3px solid #991b1b; }
   .session-info { flex: 1; min-width: 0; }
   .session-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .url-input { flex: 2; min-width: 0; }
@@ -57,10 +58,12 @@
   .url-input input.has-url:focus { background: #fff; }
   .status-icon { width: 24px; text-align: center; font-size: 15px; flex-shrink: 0; }
 
-  /* RE-DOWNLOAD TOGGLE */
+  /* RE-DOWNLOAD & XLR TOGGLES */
   .redownload-wrap { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+  .xlr-wrap { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
   .toggle-label { font-size: 11px; color: #666; white-space: nowrap; user-select: none; cursor: pointer; }
   .toggle-label.active { color: #c2410c; font-weight: 600; }
+  .toggle-label.xlr-active { color: #991b1b; font-weight: 600; }
   /* switch */
   .switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
   .switch input { opacity: 0; width: 0; height: 0; }
@@ -68,6 +71,7 @@
   .slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
   input:checked + .slider { background: #f97316; }
   input:checked + .slider::before { transform: translateX(16px); }
+  .xlr-switch input:checked + .slider { background: #991b1b; }
 
   /* ACTIONS */
   .actions { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
@@ -244,9 +248,10 @@ function renderAlwaysOn(assets) {
     var s = assets[key];
     var hasUrl = s.url && s.url.trim() !== '';
     var isRedownload = !!s.redownload;
+    var isXlr = !!s.xlr_feed;
 
     var row = document.createElement('div');
-    row.className = 'session-row' + (isRedownload ? ' redownload-on' : '');
+    row.className = 'session-row' + (isRedownload ? ' redownload-on' : '') + (isXlr ? ' xlr-on' : '');
 
     var icon = document.createElement('div');
     icon.className = 'status-icon';
@@ -274,6 +279,7 @@ function renderAlwaysOn(assets) {
     });
     urlWrap.appendChild(input);
 
+    // Re-download toggle
     var rdWrap = document.createElement('div');
     rdWrap.className = 'redownload-wrap';
     var toggleId = 'ao-rd-' + key.replace(/[^a-z0-9]/gi, '_');
@@ -288,12 +294,13 @@ function renderAlwaysOn(assets) {
     chk.id = toggleId;
     chk.dataset.key = key;
     chk.dataset.section = 'always_on';
+    chk.dataset.field = 'redownload';
     chk.checked = isRedownload;
     chk.addEventListener('change', function() {
       var on = this.checked;
       lbl.textContent = on ? '🔄 Re-download!' : 'Re-download?';
       lbl.className = 'toggle-label' + (on ? ' active' : '');
-      row.className = 'session-row' + (on ? ' redownload-on' : '');
+      row.className = 'session-row' + (on ? ' redownload-on' : '') + (xlrChk.checked ? ' xlr-on' : '');
       markDirty();
     });
     var sldr = document.createElement('span');
@@ -303,10 +310,42 @@ function renderAlwaysOn(assets) {
     rdWrap.appendChild(lbl);
     rdWrap.appendChild(sw);
 
+    // XLR Feed toggle
+    var xlrWrap = document.createElement('div');
+    xlrWrap.className = 'xlr-wrap';
+    var xlrToggleId = 'ao-xlr-' + key.replace(/[^a-z0-9]/gi, '_');
+    var xlrLbl = document.createElement('label');
+    xlrLbl.className = 'toggle-label' + (isXlr ? ' xlr-active' : '');
+    xlrLbl.htmlFor = xlrToggleId;
+    xlrLbl.textContent = isXlr ? '🎙 XLR On!' : 'XLR Feed?';
+    var xlrSw = document.createElement('label');
+    xlrSw.className = 'switch xlr-switch';
+    var xlrChk = document.createElement('input');
+    xlrChk.type = 'checkbox';
+    xlrChk.id = xlrToggleId;
+    xlrChk.dataset.key = key;
+    xlrChk.dataset.section = 'always_on';
+    xlrChk.dataset.field = 'xlr_feed';
+    xlrChk.checked = isXlr;
+    xlrChk.addEventListener('change', function() {
+      var on = this.checked;
+      xlrLbl.textContent = on ? '🎙 XLR On!' : 'XLR Feed?';
+      xlrLbl.className = 'toggle-label' + (on ? ' xlr-active' : '');
+      row.className = 'session-row' + (chk.checked ? ' redownload-on' : '') + (on ? ' xlr-on' : '');
+      markDirty();
+    });
+    var xlrSldr = document.createElement('span');
+    xlrSldr.className = 'slider';
+    xlrSw.appendChild(xlrChk);
+    xlrSw.appendChild(xlrSldr);
+    xlrWrap.appendChild(xlrLbl);
+    xlrWrap.appendChild(xlrSw);
+
     row.appendChild(icon);
     row.appendChild(info);
     row.appendChild(urlWrap);
     row.appendChild(rdWrap);
+    row.appendChild(xlrWrap);
     group.appendChild(row);
   });
 
@@ -343,9 +382,10 @@ function renderSessions(sessions) {
       var s = sessions[key];
       var hasUrl = s.url && s.url.trim() !== '';
       var isRedownload = !!s.redownload;
+      var isXlr = !!s.xlr_feed;
 
       var row = document.createElement('div');
-      row.className = 'session-row' + (isRedownload ? ' redownload-on' : '');
+      row.className = 'session-row' + (isRedownload ? ' redownload-on' : '') + (isXlr ? ' xlr-on' : '');
 
       // Status icon
       var icon = document.createElement('div');
@@ -392,12 +432,13 @@ function renderSessions(sessions) {
       chk.type = 'checkbox';
       chk.id = toggleId;
       chk.dataset.key = key;
+      chk.dataset.field = 'redownload';
       chk.checked = isRedownload;
       chk.addEventListener('change', function() {
         var on = this.checked;
         lbl.textContent = on ? '🔄 Re-download!' : 'Re-download?';
         lbl.className = 'toggle-label' + (on ? ' active' : '');
-        row.className = 'session-row' + (on ? ' redownload-on' : '');
+        row.className = 'session-row' + (on ? ' redownload-on' : '') + (xlrChk.checked ? ' xlr-on' : '');
         markDirty();
       });
 
@@ -409,10 +450,47 @@ function renderSessions(sessions) {
       rdWrap.appendChild(lbl);
       rdWrap.appendChild(sw);
 
+      // XLR Feed toggle
+      var xlrWrap = document.createElement('div');
+      xlrWrap.className = 'xlr-wrap';
+
+      var xlrToggleId = 'xlr-' + key.replace(/[^a-z0-9]/gi, '_');
+
+      var xlrLbl = document.createElement('label');
+      xlrLbl.className = 'toggle-label' + (isXlr ? ' xlr-active' : '');
+      xlrLbl.htmlFor = xlrToggleId;
+      xlrLbl.textContent = isXlr ? '🎙 XLR On!' : 'XLR Feed?';
+
+      var xlrSw = document.createElement('label');
+      xlrSw.className = 'switch xlr-switch';
+
+      var xlrChk = document.createElement('input');
+      xlrChk.type = 'checkbox';
+      xlrChk.id = xlrToggleId;
+      xlrChk.dataset.key = key;
+      xlrChk.dataset.field = 'xlr_feed';
+      xlrChk.checked = isXlr;
+      xlrChk.addEventListener('change', function() {
+        var on = this.checked;
+        xlrLbl.textContent = on ? '🎙 XLR On!' : 'XLR Feed?';
+        xlrLbl.className = 'toggle-label' + (on ? ' xlr-active' : '');
+        row.className = 'session-row' + (chk.checked ? ' redownload-on' : '') + (on ? ' xlr-on' : '');
+        markDirty();
+      });
+
+      var xlrSldr = document.createElement('span');
+      xlrSldr.className = 'slider';
+
+      xlrSw.appendChild(xlrChk);
+      xlrSw.appendChild(xlrSldr);
+      xlrWrap.appendChild(xlrLbl);
+      xlrWrap.appendChild(xlrSw);
+
       row.appendChild(icon);
       row.appendChild(info);
       row.appendChild(urlWrap);
       row.appendChild(rdWrap);
+      row.appendChild(xlrWrap);
       group.appendChild(row);
     });
 
@@ -443,10 +521,11 @@ function collectValues() {
   document.querySelectorAll('.switch input[type=checkbox]').forEach(function(chk) {
     var key = chk.dataset.key;
     var section = chk.dataset.section;
+    var field = chk.dataset.field || 'redownload';
     if (section === 'always_on' && jsonData.always_on && jsonData.always_on[key]) {
-      jsonData.always_on[key].redownload = chk.checked;
+      jsonData.always_on[key][field] = chk.checked;
     } else if (jsonData.sessions[key]) {
-      jsonData.sessions[key].redownload = chk.checked;
+      jsonData.sessions[key][field] = chk.checked;
     }
   });
 }

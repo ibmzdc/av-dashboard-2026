@@ -51,6 +51,9 @@ const CSS_INSERT = `
   .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
   @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
+  /* XLR FEED BADGE */
+  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #991b1b; white-space: nowrap; }
+
   /* DECK BTNS */
   .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 
@@ -124,6 +127,7 @@ function deckHTML(entry) {
   if (entry && entry.url && entry.url.trim() !== '') {
     var html = '<div class="deck-btns"><a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
     if (entry.redownload) html += '<span class="badge-redownload">&#8635; Re-download!</span>';
+    if (entry.xlr_feed) html += '<span class="badge-xlr">&#127908; XLR Feed</span>';
     html += '</div>';
     return html;
   }

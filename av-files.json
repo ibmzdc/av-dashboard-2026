@@ -13,9 +13,15 @@
     "  • The dashboard will show a pulsing orange badge next to the Download button",
     "  • Once the AV team has re-downloaded, toggle it off → Save & Publish",
     "",
+    "To flag XLR audio feed required:",
+    "  • In admin.html, toggle 'XLR Feed' for that session → Save & Publish",
+    "  • The dashboard will show a red 🎙 XLR Feed badge on that session row",
+    "  • IBM-provided ZOOM recorder must be connected via XLR for audio capture",
+    "",
     "Fields per session:",
     "  url        — Box shared link (empty = not yet available)",
     "  redownload — true = AV team needs to re-download this file",
+    "  xlr_feed   — true = XLR audio feed required (connect ZOOM recorder)",
     "  label      — display name (do not change)",
     "  day        — used for grouping (do not change)",
     "",
@@ -23,19 +29,21 @@
     "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
-  "_version": "1.3",
+  "_version": "1.4",
   "_updated": "2026-10-02",
 
   "always_on": {
     "Holding Slide": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Holding Slide",
       "description": "Shown before event start and during all breaks"
     },
     "Opening Video": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Opening Video",
       "description": "Played at event start"
     }
@@ -45,102 +53,119 @@
     "Introduction to the ZDC": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Introduction to the ZDC",
       "day": "Sunday"
     },
     "Welcome & Plan for the Week": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Welcome & Plan for the Week",
       "day": "Monday"
     },
     "AI on IBM Z: From Transactional Intelligence to Agentic Workflows": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "AI on IBM Z: From Transactional Intelligence to Agentic Workflows",
       "day": "Monday"
     },
     "Flex Time Kickoff": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Flex Time Kickoff",
       "day": "Monday"
     },
     "Opening Keynote — Designing the Future of Computing": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Opening Keynote — Designing the Future of Computing",
       "day": "Tuesday"
     },
     "Continuing IBM Z Full-Stack Simplification": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Continuing IBM Z Full-Stack Simplification",
       "day": "Tuesday"
     },
     "Reimagining Mainframe Engineering Across the Stack": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Reimagining Mainframe Engineering Across the Stack",
       "day": "Tuesday"
     },
     "Managing my Db2 & IMS Systems with Z Database Assistant": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Managing my Db2 & IMS Systems with Z Database Assistant",
       "day": "Wednesday"
     },
     "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion",
       "day": "Wednesday"
     },
     "Project Polaris Roadmap: Leading to the z/OS Next GA Experience": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Project Polaris Roadmap: Leading to the z/OS Next GA Experience",
       "day": "Wednesday"
     },
     "The Geometry of Intelligence": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "The Geometry of Intelligence",
       "day": "Wednesday"
     },
     "Expedite Problem Diagnosis in Z Operations": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Expedite Problem Diagnosis in Z Operations",
       "day": "Wednesday"
     },
     "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment",
       "day": "Wednesday"
     },
     "How IBM Bob Is Changing the Game for Mainframe Developers": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "How IBM Bob Is Changing the Game for Mainframe Developers",
       "day": "Thursday"
     },
     "Collaborative Session Playbacks (Round 1)": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Collaborative Session Playbacks (Round 1)",
       "day": "Thursday"
     },
     "Collaborative Session Playbacks (Round 2)": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Collaborative Session Playbacks (Round 2)",
       "day": "Thursday"
     },
     "Final Wrap-Up": {
       "url": "",
       "redownload": false,
+      "xlr_feed": false,
       "label": "Final Wrap-Up",
       "day": "Thursday"
     }
