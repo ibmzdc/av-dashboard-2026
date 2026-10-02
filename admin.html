@@ -49,8 +49,16 @@
   .session-row:hover { background: #f7f8ff; }
   .session-row.redownload-on { background: #fff8f0; border-left: 3px solid #f97316; }
   .session-row.xlr-on { border-right: 3px solid #991b1b; }
-  .session-info { flex: 1; min-width: 0; }
+  .session-info { flex: 1.6; min-width: 0; }
   .session-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .session-meta { font-size: 10px; color: #888; margin-top: 2px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .meta-room { color: #1e2761; font-weight: 600; }
+  .meta-type { color: #555; }
+  .meta-proj { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .meta-proj-av     { background: #dbeafe; color: #1d4ed8; }
+  .meta-proj-pres   { background: #dcfce7; color: #166534; }
+  .meta-proj-collab { background: #fef3c7; color: #92400e; }
+  .meta-proj-fair   { background: #f3e8ff; color: #6b21a8; }
   .url-input { flex: 2; min-width: 0; }
   .url-input input { width: 100%; padding: 7px 10px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #1a1a2e; background: #f9fafb; }
   .url-input input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; background: #fff; }
@@ -393,10 +401,26 @@ function renderSessions(sessions) {
       icon.className = 'status-icon';
       icon.textContent = hasUrl ? '✅' : '⏳';
 
-      // Session title
+      // Session title + meta (room, type, projection)
       var info = document.createElement('div');
       info.className = 'session-info';
-      info.innerHTML = '<div class="session-title" title="' + escHtml(key) + '">' + escHtml(key) + '</div>';
+      var projClass = '';
+      if (s.proj_type) {
+        var pt = s.proj_type.toLowerCase();
+        projClass = pt.indexOf('av team') !== -1 ? 'meta-proj-av'
+                  : pt.indexOf('presenter') !== -1 ? 'meta-proj-pres'
+                  : pt.indexOf('collaborative') !== -1 ? 'meta-proj-collab'
+                  : pt.indexOf('design fair') !== -1 ? 'meta-proj-fair' : '';
+      }
+      var metaHtml = '';
+      if (s.room || s.session_type || s.proj_type) {
+        metaHtml = '<div class="session-meta">' +
+          (s.room ? '<span class="meta-room">' + escHtml(s.room) + '</span>' : '') +
+          (s.session_type ? '<span class="meta-type">' + escHtml(s.session_type) + '</span>' : '') +
+          (s.proj_type && projClass ? '<span class="meta-proj ' + projClass + '">' + escHtml(s.proj_type) + '</span>' : '') +
+          '</div>';
+      }
+      info.innerHTML = '<div class="session-title" title="' + escHtml(key) + '">' + escHtml(key) + '</div>' + metaHtml;
 
       // URL input
       var urlWrap = document.createElement('div');
