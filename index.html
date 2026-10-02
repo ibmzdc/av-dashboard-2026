@@ -97,6 +97,17 @@
   #deck-status.loading { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; display: block; }
   #deck-status.loaded { background: #f0fdf4; border-color: #86efac; color: #166534; display: block; }
 
+  /* ALWAYS-ON PANEL */
+  .always-on-panel { background: #fff; border: 2px solid #1e2761; border-radius: 6px; margin: 18px 28px 4px; overflow: hidden; }
+  .always-on-header { background: #1e2761; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
+  .always-on-header span { font-size: 15px; }
+  .always-on-row { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border-top: 1px solid #e8eaf0; }
+  .always-on-row:first-of-type { border-top: none; }
+  .always-on-info { flex: 1; }
+  .always-on-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+  .always-on-desc { font-size: 11px; color: #666; margin-top: 2px; }
+  .always-on-btn { flex-shrink: 0; min-width: 110px; text-align: center; }
+
   /* HIDDEN */
   .day-section.hidden { display: none; }
   tr.hidden-row { display: none; }
@@ -161,6 +172,25 @@
 </div>
 
 <div id="deck-status" class="loading">Loading presentation decks from Box…</div>
+
+<!-- ⚡ ALWAYS-ON ASSETS (pinned, not affected by filters) -->
+<div class="always-on-panel">
+  <div class="always-on-header"><span>⚡</span> Always-On Assets</div>
+  <div class="always-on-row" id="ao-Holding Slide">
+    <div class="always-on-info">
+      <div class="always-on-title">Holding Slide</div>
+      <div class="always-on-desc">Shown before event start and during all breaks</div>
+    </div>
+    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
+  </div>
+  <div class="always-on-row" id="ao-Opening Video">
+    <div class="always-on-info">
+      <div class="always-on-title">Opening Video</div>
+      <div class="always-on-desc">Played at event start</div>
+    </div>
+    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
+  </div>
+</div>
 
 <div class="summary-bar">
   <span>Sessions visible: <strong id="count-visible">0</strong></span>
@@ -1007,25 +1037,33 @@
 // To update a deck link: edit av-files.json → commit & push → live within ~30s
 var AV_FILES_URL = 'https://raw.githubusercontent.com/ibmzdc/av-dashboard-2026/main/av-files.json';
 
-function injectDeckLinks(sessions) {
+function deckHTML(entry) {
+  if (entry && entry.url && entry.url.trim() !== '') {
+    var html = '<div class="deck-btns"><a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
+    if (entry.redownload) html += '<span class="badge-redownload">&#8635; Re-download!</span>';
+    html += '</div>';
+    return html;
+  }
+  return '<span class="deck-pending">Pending</span>';
+}
+
+function injectDeckLinks(sessions, alwaysOn) {
+  // Session deck cells
   document.querySelectorAll('td.deck-cell[data-session-key]').forEach(function(cell) {
     var key = cell.getAttribute('data-session-key');
-    // decode HTML entities in the key to match JSON keys
     var tmp = document.createElement('textarea');
     tmp.innerHTML = key;
-    var decodedKey = tmp.value;
-    var entry = sessions[decodedKey];
-    if (entry && entry.url && entry.url.trim() !== '') {
-      var redownload = !!entry.redownload;
-      var html = '<div class="deck-btns"><a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
-      if (redownload) {
-        html += '<span class="badge-redownload">&#8635; Re-download!</span>';
-      }
-      html += '</div>';
-      cell.innerHTML = html;
-    } else {
-      cell.innerHTML = '<span class="deck-pending">Pending</span>';
-    }
+    var entry = sessions[tmp.value];
+    cell.innerHTML = deckHTML(entry);
+  });
+
+  // Always-On panel
+  var aoAssets = alwaysOn || {};
+  Object.keys(aoAssets).forEach(function(key) {
+    var row = document.getElementById('ao-' + key);
+    if (!row) return;
+    var btnDiv = row.querySelector('.always-on-btn');
+    if (btnDiv) btnDiv.innerHTML = deckHTML(aoAssets[key]);
   });
 }
 
@@ -1044,7 +1082,7 @@ fetch(AV_FILES_URL)
     return r.json();
   })
   .then(function(data) {
-    injectDeckLinks(data.sessions || {});
+    injectDeckLinks(data.sessions || {}, data.always_on || {});
     var total = Object.keys(data.sessions || {}).length;
     var ready = Object.values(data.sessions || {}).filter(function(s){ return s.url && s.url.trim(); }).length;
     setDeckStatus('loaded', '✓ Deck links loaded — ' + ready + ' of ' + total + ' decks available');

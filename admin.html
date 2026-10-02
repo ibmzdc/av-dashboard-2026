@@ -134,6 +134,7 @@
     <span><span class="legend-swatch" style="background:#f97316"></span> Re-download flagged — AV team must re-download</span>
   </div>
 
+  <div id="always-on-container"></div>
   <div id="sessions-container"></div>
 
 </div>
@@ -212,6 +213,7 @@ function loadData() {
       fileSha = meta.sha;
       var content = atob(meta.content.replace(/\n/g,''));
       jsonData = JSON.parse(content);
+      renderAlwaysOn(jsonData.always_on || {});
       renderSessions(jsonData.sessions);
       var linked = Object.values(jsonData.sessions).filter(function(s){ return s.url && s.url.trim(); }).length;
       setStatus('info', '✓ Loaded — ' + linked + ' of ' + Object.keys(jsonData.sessions).length + ' decks linked  ·  Last saved: ' + (jsonData._updated || 'unknown'));
@@ -220,6 +222,95 @@ function loadData() {
     .catch(function(err) {
       setStatus('error', '✗ ' + err.message);
     });
+}
+
+// ── Render session rows grouped by day ───────────────────────────────────────
+// ── Render Always-On assets ───────────────────────────────────────────────────
+function renderAlwaysOn(assets) {
+  var container = document.getElementById('always-on-container');
+  container.innerHTML = '';
+  if (!Object.keys(assets).length) return;
+
+  var group = document.createElement('div');
+  group.className = 'day-group';
+
+  var label = document.createElement('div');
+  label.className = 'day-label';
+  label.style.background = '#1e2761';
+  label.innerHTML = '⚡ Always-On Assets';
+  group.appendChild(label);
+
+  Object.keys(assets).forEach(function(key) {
+    var s = assets[key];
+    var hasUrl = s.url && s.url.trim() !== '';
+    var isRedownload = !!s.redownload;
+
+    var row = document.createElement('div');
+    row.className = 'session-row' + (isRedownload ? ' redownload-on' : '');
+
+    var icon = document.createElement('div');
+    icon.className = 'status-icon';
+    icon.textContent = hasUrl ? '✅' : '⏳';
+
+    var info = document.createElement('div');
+    info.className = 'session-info';
+    info.innerHTML = '<div class="session-title">' + escHtml(key) + '</div>' +
+      (s.description ? '<div style="font-size:10px;color:#888;margin-top:1px">' + escHtml(s.description) + '</div>' : '');
+
+    var urlWrap = document.createElement('div');
+    urlWrap.className = 'url-input';
+    var input = document.createElement('input');
+    input.type = 'url';
+    input.placeholder = 'Paste Box shared link here…';
+    input.value = s.url || '';
+    input.dataset.key = key;
+    input.dataset.section = 'always_on';
+    if (hasUrl) input.classList.add('has-url');
+    input.addEventListener('input', function() {
+      var filled = this.value.trim() !== '';
+      this.classList.toggle('has-url', filled);
+      icon.textContent = filled ? '✅' : '⏳';
+      markDirty();
+    });
+    urlWrap.appendChild(input);
+
+    var rdWrap = document.createElement('div');
+    rdWrap.className = 'redownload-wrap';
+    var toggleId = 'ao-rd-' + key.replace(/[^a-z0-9]/gi, '_');
+    var lbl = document.createElement('label');
+    lbl.className = 'toggle-label' + (isRedownload ? ' active' : '');
+    lbl.htmlFor = toggleId;
+    lbl.textContent = isRedownload ? '🔄 Re-download!' : 'Re-download?';
+    var sw = document.createElement('label');
+    sw.className = 'switch';
+    var chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.id = toggleId;
+    chk.dataset.key = key;
+    chk.dataset.section = 'always_on';
+    chk.checked = isRedownload;
+    chk.addEventListener('change', function() {
+      var on = this.checked;
+      lbl.textContent = on ? '🔄 Re-download!' : 'Re-download?';
+      lbl.className = 'toggle-label' + (on ? ' active' : '');
+      row.className = 'session-row' + (on ? ' redownload-on' : '');
+      markDirty();
+    });
+    var sldr = document.createElement('span');
+    sldr.className = 'slider';
+    sw.appendChild(chk);
+    sw.appendChild(sldr);
+    rdWrap.appendChild(lbl);
+    rdWrap.appendChild(sw);
+
+    row.appendChild(icon);
+    row.appendChild(info);
+    row.appendChild(urlWrap);
+    row.appendChild(rdWrap);
+    group.appendChild(row);
+  });
+
+  container.appendChild(group);
 }
 
 // ── Render session rows grouped by day ───────────────────────────────────────
@@ -342,13 +433,19 @@ function markDirty() {
 function collectValues() {
   document.querySelectorAll('.url-input input').forEach(function(input) {
     var key = input.dataset.key;
-    if (jsonData.sessions[key]) {
+    var section = input.dataset.section;
+    if (section === 'always_on' && jsonData.always_on && jsonData.always_on[key]) {
+      jsonData.always_on[key].url = input.value.trim();
+    } else if (jsonData.sessions[key]) {
       jsonData.sessions[key].url = input.value.trim();
     }
   });
   document.querySelectorAll('.switch input[type=checkbox]').forEach(function(chk) {
     var key = chk.dataset.key;
-    if (jsonData.sessions[key]) {
+    var section = chk.dataset.section;
+    if (section === 'always_on' && jsonData.always_on && jsonData.always_on[key]) {
+      jsonData.always_on[key].redownload = chk.checked;
+    } else if (jsonData.sessions[key]) {
       jsonData.sessions[key].redownload = chk.checked;
     }
   });

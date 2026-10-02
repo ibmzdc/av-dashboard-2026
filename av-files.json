@@ -23,8 +23,23 @@
     "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
-  "_version": "1.2",
+  "_version": "1.3",
   "_updated": "2026-10-02",
+
+  "always_on": {
+    "Holding Slide": {
+      "url": "",
+      "redownload": false,
+      "label": "Holding Slide",
+      "description": "Shown before event start and during all breaks"
+    },
+    "Opening Video": {
+      "url": "",
+      "redownload": false,
+      "label": "Opening Video",
+      "description": "Played at event start"
+    }
+  },
 
   "sessions": {
     "Introduction to the ZDC": {
