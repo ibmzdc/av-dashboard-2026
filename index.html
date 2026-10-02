@@ -83,10 +83,13 @@
 
   /* DECK CELL */
   .deck-cell { text-align: center; vertical-align: middle !important; }
+  .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .btn-deck { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; background: #1d4ed8; color: #fff; white-space: nowrap; }
   .btn-deck:hover { background: #1e40af; }
   .deck-pending { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1; white-space: nowrap; }
   .deck-na { color: #ccc; font-size: 12px; }
+  .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
+  @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
   /* DECK STATUS BAR */
   #deck-status { font-size: 11px; padding: 5px 28px; background: #fffbeb; border-bottom: 1px solid #fde68a; color: #78350f; display: none; }
@@ -1013,7 +1016,13 @@ function injectDeckLinks(sessions) {
     var decodedKey = tmp.value;
     var entry = sessions[decodedKey];
     if (entry && entry.url && entry.url.trim() !== '') {
-      cell.innerHTML = '<a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
+      var redownload = !!entry.redownload;
+      var html = '<div class="deck-btns"><a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
+      if (redownload) {
+        html += '<span class="badge-redownload">&#8635; Re-download!</span>';
+      }
+      html += '</div>';
+      cell.innerHTML = html;
     } else {
       cell.innerHTML = '<span class="deck-pending">Pending</span>';
     }

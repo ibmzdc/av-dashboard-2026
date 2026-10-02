@@ -4,102 +4,128 @@
     "",
     "When a presentation deck is ready:",
     "  1. Upload the file (PPT or PDF) to Box",
-    "  2. Right-click â Share â Copy Shared Link",
-    "  3. Find the matching session below",
-    "  4. Set its 'url' field to the Box shared link",
-    "  5. Save this file, commit and push to GitHub",
-    "  6. The dashboard updates live within ~30 seconds â no other changes needed",
+    "  2. Right-click → Share → Copy Shared Link",
+    "  3. Open admin.html, paste the link into the matching session, click Save & Publish",
+    "  4. The dashboard updates live within ~30 seconds — no other changes needed",
     "",
-    "To clear a link (e.g. wrong file uploaded): set 'url' back to empty string ''",
+    "To flag a re-download (file was replaced/updated):",
+    "  • In admin.html, toggle 'Re-download required' for that session → Save & Publish",
+    "  • The dashboard will show a pulsing orange badge next to the Download button",
+    "  • Once the AV team has re-downloaded, toggle it off → Save & Publish",
+    "",
+    "Fields per session:",
+    "  url        — Box shared link (empty = not yet available)",
+    "  redownload — true = AV team needs to re-download this file",
+    "  label      — display name (do not change)",
+    "  day        — used for grouping (do not change)",
     "",
     "Dashboard URL: https://ibmzdc.github.io/av-dashboard-2026/",
+    "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
-  "_version": "1.1",
+  "_version": "1.2",
   "_updated": "2026-10-02",
+
   "sessions": {
     "Introduction to the ZDC": {
-      "url": "https://ibm.box.com/s/3sxwsu3l0oxemordzjx7suivcckqf6x9",
+      "url": "",
+      "redownload": false,
       "label": "Introduction to the ZDC",
       "day": "Sunday"
     },
     "Welcome & Plan for the Week": {
       "url": "",
+      "redownload": false,
       "label": "Welcome & Plan for the Week",
       "day": "Monday"
     },
     "AI on IBM Z: From Transactional Intelligence to Agentic Workflows": {
       "url": "",
+      "redownload": false,
       "label": "AI on IBM Z: From Transactional Intelligence to Agentic Workflows",
       "day": "Monday"
     },
     "Flex Time Kickoff": {
       "url": "",
+      "redownload": false,
       "label": "Flex Time Kickoff",
       "day": "Monday"
     },
-    "Opening Keynote â Designing the Future of Computing": {
+    "Opening Keynote — Designing the Future of Computing": {
       "url": "",
-      "label": "Opening Keynote â Designing the Future of Computing",
+      "redownload": false,
+      "label": "Opening Keynote — Designing the Future of Computing",
       "day": "Tuesday"
     },
     "Continuing IBM Z Full-Stack Simplification": {
       "url": "",
+      "redownload": false,
       "label": "Continuing IBM Z Full-Stack Simplification",
       "day": "Tuesday"
     },
     "Reimagining Mainframe Engineering Across the Stack": {
       "url": "",
+      "redownload": false,
       "label": "Reimagining Mainframe Engineering Across the Stack",
       "day": "Tuesday"
     },
     "Managing my Db2 & IMS Systems with Z Database Assistant": {
       "url": "",
+      "redownload": false,
       "label": "Managing my Db2 & IMS Systems with Z Database Assistant",
       "day": "Wednesday"
     },
     "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
       "url": "",
+      "redownload": false,
       "label": "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion",
       "day": "Wednesday"
     },
     "Project Polaris Roadmap: Leading to the z/OS Next GA Experience": {
       "url": "",
+      "redownload": false,
       "label": "Project Polaris Roadmap: Leading to the z/OS Next GA Experience",
       "day": "Wednesday"
     },
     "The Geometry of Intelligence": {
       "url": "",
+      "redownload": false,
       "label": "The Geometry of Intelligence",
       "day": "Wednesday"
     },
     "Expedite Problem Diagnosis in Z Operations": {
       "url": "",
+      "redownload": false,
       "label": "Expedite Problem Diagnosis in Z Operations",
       "day": "Wednesday"
     },
     "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment": {
       "url": "",
+      "redownload": false,
       "label": "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment",
       "day": "Wednesday"
     },
     "How IBM Bob Is Changing the Game for Mainframe Developers": {
       "url": "",
+      "redownload": false,
       "label": "How IBM Bob Is Changing the Game for Mainframe Developers",
       "day": "Thursday"
     },
     "Collaborative Session Playbacks (Round 1)": {
       "url": "",
+      "redownload": false,
       "label": "Collaborative Session Playbacks (Round 1)",
       "day": "Thursday"
     },
     "Collaborative Session Playbacks (Round 2)": {
       "url": "",
+      "redownload": false,
       "label": "Collaborative Session Playbacks (Round 2)",
       "day": "Thursday"
     },
     "Final Wrap-Up": {
       "url": "",
+      "redownload": false,
       "label": "Final Wrap-Up",
       "day": "Thursday"
     }

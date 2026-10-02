@@ -26,7 +26,7 @@
   .token-hint a { color: #3b82d4; }
 
   /* MAIN */
-  .main { max-width: 860px; margin: 24px auto; padding: 0 20px 60px; }
+  .main { max-width: 960px; margin: 24px auto; padding: 0 20px 60px; }
 
   /* STATUS BAR */
   #status-bar { padding: 10px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; display: none; }
@@ -40,18 +40,30 @@
   .day-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #fff; background: #1e2761; padding: 5px 12px; border-radius: 4px 4px 0 0; }
 
   /* SESSION ROWS */
-  .session-row { background: #fff; border: 1px solid #d8dce8; border-top: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .session-row { background: #fff; border: 1px solid #d8dce8; border-top: none; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
   .session-row:last-child { border-radius: 0 0 4px 4px; }
   .session-row:hover { background: #f7f8ff; }
+  .session-row.redownload-on { background: #fff8f0; border-left: 3px solid #f97316; }
   .session-info { flex: 1; min-width: 0; }
   .session-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .session-type-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
   .url-input { flex: 2; min-width: 0; }
   .url-input input { width: 100%; padding: 7px 10px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #1a1a2e; background: #f9fafb; }
   .url-input input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; background: #fff; }
   .url-input input.has-url { border-color: #86efac; background: #f0fdf4; }
   .url-input input.has-url:focus { background: #fff; }
-  .status-icon { width: 28px; text-align: center; font-size: 16px; flex-shrink: 0; }
+  .status-icon { width: 24px; text-align: center; font-size: 15px; flex-shrink: 0; }
+
+  /* RE-DOWNLOAD TOGGLE */
+  .redownload-wrap { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+  .toggle-label { font-size: 11px; color: #666; white-space: nowrap; user-select: none; cursor: pointer; }
+  .toggle-label.active { color: #c2410c; font-weight: 600; }
+  /* switch */
+  .switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; inset: 0; background: #cbd5e1; border-radius: 20px; transition: background 0.2s; }
+  .slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+  input:checked + .slider { background: #f97316; }
+  input:checked + .slider::before { transform: translateX(16px); }
 
   /* ACTIONS */
   .actions { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
@@ -64,8 +76,9 @@
   .save-note { font-size: 11px; color: #888; }
 
   /* LEGEND */
-  .legend { display: flex; gap: 16px; font-size: 11px; color: #666; margin-bottom: 16px; flex-wrap: wrap; }
+  .legend { display: flex; gap: 16px; font-size: 11px; color: #666; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
   .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
 
   footer { text-align: center; font-size: 11px; color: #888; border-top: 1px solid #dde0ea; padding: 14px; margin-top: 10px; }
 </style>
@@ -109,6 +122,7 @@
   <div class="legend">
     <span>✅ Deck linked</span>
     <span>⏳ Pending (no URL yet)</span>
+    <span><span class="legend-swatch" style="background:#f97316"></span> Re-download flagged — AV team must re-download</span>
   </div>
 
   <div id="sessions-container"></div>
@@ -197,39 +211,77 @@ function renderSessions(sessions) {
     keys.forEach(function(key) {
       var s = sessions[key];
       var hasUrl = s.url && s.url.trim() !== '';
+      var isRedownload = !!s.redownload;
 
       var row = document.createElement('div');
-      row.className = 'session-row';
+      row.className = 'session-row' + (isRedownload ? ' redownload-on' : '');
 
+      // Status icon
       var icon = document.createElement('div');
       icon.className = 'status-icon';
       icon.textContent = hasUrl ? '✅' : '⏳';
 
+      // Session title
       var info = document.createElement('div');
       info.className = 'session-info';
       info.innerHTML = '<div class="session-title" title="' + escHtml(key) + '">' + escHtml(key) + '</div>';
 
+      // URL input
       var urlWrap = document.createElement('div');
       urlWrap.className = 'url-input';
-
       var input = document.createElement('input');
       input.type = 'url';
       input.placeholder = 'Paste Box shared link here…';
       input.value = s.url || '';
       input.dataset.key = key;
       if (hasUrl) input.classList.add('has-url');
-
       input.addEventListener('input', function() {
         var filled = this.value.trim() !== '';
         this.classList.toggle('has-url', filled);
         icon.textContent = filled ? '✅' : '⏳';
         markDirty();
       });
-
       urlWrap.appendChild(input);
+
+      // Re-download toggle
+      var rdWrap = document.createElement('div');
+      rdWrap.className = 'redownload-wrap';
+
+      var toggleId = 'rd-' + key.replace(/[^a-z0-9]/gi, '_');
+
+      var lbl = document.createElement('label');
+      lbl.className = 'toggle-label' + (isRedownload ? ' active' : '');
+      lbl.htmlFor = toggleId;
+      lbl.textContent = isRedownload ? '🔄 Re-download!' : 'Re-download?';
+
+      var sw = document.createElement('label');
+      sw.className = 'switch';
+
+      var chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.id = toggleId;
+      chk.dataset.key = key;
+      chk.checked = isRedownload;
+      chk.addEventListener('change', function() {
+        var on = this.checked;
+        lbl.textContent = on ? '🔄 Re-download!' : 'Re-download?';
+        lbl.className = 'toggle-label' + (on ? ' active' : '');
+        row.className = 'session-row' + (on ? ' redownload-on' : '');
+        markDirty();
+      });
+
+      var sldr = document.createElement('span');
+      sldr.className = 'slider';
+
+      sw.appendChild(chk);
+      sw.appendChild(sldr);
+      rdWrap.appendChild(lbl);
+      rdWrap.appendChild(sw);
+
       row.appendChild(icon);
       row.appendChild(info);
       row.appendChild(urlWrap);
+      row.appendChild(rdWrap);
       group.appendChild(row);
     });
 
@@ -252,6 +304,12 @@ function collectValues() {
     var key = input.dataset.key;
     if (jsonData.sessions[key]) {
       jsonData.sessions[key].url = input.value.trim();
+    }
+  });
+  document.querySelectorAll('.switch input[type=checkbox]').forEach(function(chk) {
+    var key = chk.dataset.key;
+    if (jsonData.sessions[key]) {
+      jsonData.sessions[key].redownload = chk.checked;
     }
   });
 }
