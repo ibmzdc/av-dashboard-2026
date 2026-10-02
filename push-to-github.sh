@@ -12,9 +12,22 @@ echo ""
 echo "📦  ZDC AV Dashboard — Push to GitHub"
 echo "────────────────────────────────────────"
 
+# Load token from .github-token (local only, never pushed)
+TOKEN_FILE="$REPO_DIR/.github-token"
+if [ ! -f "$TOKEN_FILE" ]; then
+  echo ""
+  echo "❌  No token file found."
+  echo "    Create a file named .github-token in this folder"
+  echo "    containing only your GitHub Personal Access Token."
+  echo ""
+  read -p "Press Enter to close..."
+  exit 1
+fi
+GH_TOKEN=$(cat "$TOKEN_FILE" | tr -d '[:space:]')
+git remote set-url origin "https://ibmzdc:${GH_TOKEN}@github.com/ibmzdc/av-dashboard-2026.git"
+
 # Check for changes
 if git diff --quiet && git diff --staged --quiet; then
-  # Check for untracked files too
   UNTRACKED=$(git ls-files --others --exclude-standard)
   if [ -z "$UNTRACKED" ]; then
     echo "✅  Nothing to push — all files are up to date."
@@ -30,13 +43,10 @@ echo "Files to push:"
 git status --short
 echo ""
 
-# Commit message with timestamp
+# Commit and push
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M')
-COMMIT_MSG="Update dashboard files — $TIMESTAMP"
-
-# Stage, commit, push
 git add -A
-git commit -m "$COMMIT_MSG"
+git commit -m "Update dashboard files — $TIMESTAMP"
 
 echo ""
 echo "⬆  Pushing to https://github.com/ibmzdc/av-dashboard-2026 ..."
@@ -49,8 +59,7 @@ if git push origin main; then
   echo "    (GitHub Pages updates within ~30 seconds)"
 else
   echo ""
-  echo "❌  Push failed. You may need to authenticate."
-  echo "    See setup instructions below if this is your first push."
+  echo "❌  Push failed. Check that your token in .github-token is still valid."
 fi
 
 echo ""
