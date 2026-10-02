@@ -4,11 +4,11 @@
     "",
     "When a presentation deck is ready:",
     "  1. Upload the file (PPT or PDF) to Box",
-    "  2. Right-click → Share → Copy Shared Link",
+    "  2. Right-click â Share â Copy Shared Link",
     "  3. Find the matching session below",
     "  4. Set its 'url' field to the Box shared link",
     "  5. Save this file, commit and push to GitHub",
-    "  6. The dashboard updates live within ~30 seconds — no other changes needed",
+    "  6. The dashboard updates live within ~30 seconds â no other changes needed",
     "",
     "To clear a link (e.g. wrong file uploaded): set 'url' back to empty string ''",
     "",
@@ -17,10 +17,9 @@
   ],
   "_version": "1.1",
   "_updated": "2026-10-02",
-
   "sessions": {
     "Introduction to the ZDC": {
-      "url": "",
+      "url": "https://ibm.box.com/s/3sxwsu3l0oxemordzjx7suivcckqf6x9",
       "label": "Introduction to the ZDC",
       "day": "Sunday"
     },
@@ -39,9 +38,9 @@
       "label": "Flex Time Kickoff",
       "day": "Monday"
     },
-    "Opening Keynote — Designing the Future of Computing": {
+    "Opening Keynote â Designing the Future of Computing": {
       "url": "",
-      "label": "Opening Keynote — Designing the Future of Computing",
+      "label": "Opening Keynote â Designing the Future of Computing",
       "day": "Tuesday"
     },
     "Continuing IBM Z Full-Stack Simplification": {
