@@ -4,26 +4,26 @@
     "",
     "When a presentation deck is ready:",
     "  1. Upload the file (PPT or PDF) to Box",
-    "  2. Right-click → Share → Copy Shared Link",
+    "  2. Right-click â Share â Copy Shared Link",
     "  3. Open admin.html, paste the link into the matching session, click Save & Publish",
-    "  4. The dashboard updates live within ~30 seconds — no other changes needed",
+    "  4. The dashboard updates live within ~30 seconds â no other changes needed",
     "",
     "To flag a re-download (file was replaced/updated):",
-    "  • In admin.html, toggle 'Re-download required' for that session → Save & Publish",
-    "  • The dashboard will show a pulsing orange badge next to the Download button",
-    "  • Once the AV team has re-downloaded, toggle it off → Save & Publish",
+    "  â¢ In admin.html, toggle 'Re-download required' for that session â Save & Publish",
+    "  â¢ The dashboard will show a pulsing orange badge next to the Download button",
+    "  â¢ Once the AV team has re-downloaded, toggle it off â Save & Publish",
     "",
     "To flag XLR audio feed required:",
-    "  • In admin.html, toggle 'XLR Feed' for that session → Save & Publish",
-    "  • The dashboard will show a red 🎙 XLR Feed badge on that session row",
-    "  • IBM-provided ZOOM recorder must be connected via XLR for audio capture",
+    "  â¢ In admin.html, toggle 'XLR Feed' for that session â Save & Publish",
+    "  â¢ The dashboard will show a red ð XLR Feed badge on that session row",
+    "  â¢ IBM-provided ZOOM recorder must be connected via XLR for audio capture",
     "",
     "Fields per session:",
-    "  url        — Box shared link (empty = not yet available)",
-    "  redownload — true = AV team needs to re-download this file",
-    "  xlr_feed   — true = XLR audio feed required (connect ZOOM recorder)",
-    "  label      — display name (do not change)",
-    "  day        — used for grouping (do not change)",
+    "  url        â Box shared link (empty = not yet available)",
+    "  redownload â true = AV team needs to re-download this file",
+    "  xlr_feed   â true = XLR audio feed required (connect ZOOM recorder)",
+    "  label      â display name (do not change)",
+    "  day        â used for grouping (do not change)",
     "",
     "Dashboard URL: https://ibmzdc.github.io/av-dashboard-2026/",
     "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
@@ -31,29 +31,27 @@
   ],
   "_version": "1.4",
   "_updated": "2026-10-02",
-
   "always_on": {
     "Holding Slide": {
-      "url": "",
+      "url": "https://ibm.box.com/s/tram6clhgjz7yswrdgspnqmkujj6rh23",
       "redownload": false,
       "xlr_feed": false,
       "label": "Holding Slide",
       "description": "Shown before event start and during all breaks"
     },
     "Opening Video": {
-      "url": "",
+      "url": "https://ibm.box.com/s/78sl9axwsao8x8k6ud1rq9m2vg1b1v7r",
       "redownload": false,
       "xlr_feed": false,
       "label": "Opening Video",
       "description": "Played at event start"
     }
   },
-
   "sessions": {
     "Introduction to the ZDC": {
-      "url": "",
+      "url": "hhttps://ibm.box.com/s/3sxwsu3l0oxemordzjx7suivcckqf6x9",
       "redownload": false,
-      "xlr_feed": false,
+      "xlr_feed": true,
       "label": "Introduction to the ZDC",
       "day": "Sunday"
     },
@@ -78,11 +76,11 @@
       "label": "Flex Time Kickoff",
       "day": "Monday"
     },
-    "Opening Keynote — Designing the Future of Computing": {
+    "Opening Keynote â Designing the Future of Computing": {
       "url": "",
       "redownload": false,
       "xlr_feed": false,
-      "label": "Opening Keynote — Designing the Future of Computing",
+      "label": "Opening Keynote â Designing the Future of Computing",
       "day": "Tuesday"
     },
     "Continuing IBM Z Full-Stack Simplification": {
