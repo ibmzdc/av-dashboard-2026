@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBM Z Design Council 2026 Fall — AV Requirements Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 13px; line-height: 1.5; background: #f0f2f5; color: #1a1a2e; }
+
+  /* HEADER */
+  .page-header { background: #1e2761; color: #fff; padding: 18px 28px 14px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+  .page-header p { font-size: 12px; color: #c8cfe8; margin-top: 3px; }
+
+  /* CONTROLS BAR */
+  .controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #d8dce8; padding: 10px 28px; }
+  .controls label { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+  .controls select { font-size: 12px; padding: 5px 10px; border: 1px solid #c8d0e0; border-radius: 4px; background: #f7f8fa; color: #1a1a2e; cursor: pointer; }
+  .controls select:focus { outline: 2px solid #3b82d4; outline-offset: 1px; }
+  .filter-group { display: flex; align-items: center; }
+
+  /* SUMMARY BAR */
+  .summary-bar { background: #eef1f8; border-bottom: 1px solid #d0d5e8; padding: 7px 28px; font-size: 12px; color: #444; display: flex; gap: 20px; }
+  .summary-bar strong { color: #1e2761; }
+
+  /* MAIN CONTENT */
+  .content { padding: 18px 28px 40px; }
+
+  /* DAY SECTION */
+  .day-section { margin-bottom: 28px; }
+  .day-header { background: #1e2761; color: #fff; padding: 7px 14px; border-radius: 4px 4px 0 0; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #c8d0e0; border-top: none; border-radius: 0 0 4px 4px; overflow: hidden; table-layout: fixed; }
+  thead tr { background: #1e2761; color: #fff; }
+  thead th { padding: 8px 10px; font-size: 11px; font-weight: 700; text-align: left; border-right: 1px solid #2e3a7a; white-space: nowrap; }
+  thead th:last-child { border-right: none; }
+  tbody tr { border-bottom: 1px solid #e8eaf0; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f5f7ff; }
+  tbody td { padding: 7px 10px; vertical-align: top; border-right: 1px solid #eceef5; font-size: 12px; }
+  tbody td:last-child { border-right: none; }
+
+  /* COLUMN WIDTHS */
+  col.col-time   { width: 110px; }
+  col.col-room   { width: 130px; }
+  col.col-session { width: 200px; }
+  col.col-speaker { width: 160px; }
+  col.col-proj   { width: 110px; }
+  col.col-mic    { width: 160px; }
+  col.col-timer  { width: 70px; }
+  col.col-monitor { width: 150px; }
+  col.col-deck    { width: 100px; }
+
+  .time-cell { white-space: nowrap; color: #444; }
+  .room-cell { font-weight: 600; color: #1e2761; }
+  .session-title { font-weight: 600; color: #1a1a2e; margin-bottom: 2px; }
+  .session-type { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.4px; }
+  .speaker-cell { color: #444; }
+
+  /* PROJECTION BADGES */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-av     { background: #dbeafe; color: #1d4ed8; }
+  .badge-pres   { background: #dcfce7; color: #166534; }
+  .badge-collab { background: #fef3c7; color: #92400e; }
+  .badge-fair   { background: #f3e8ff; color: #6b21a8; }
+  .badge-other  { background: #f1f5f9; color: #475569; }
+
+  /* MICROPHONE PILLS */
+  .mic-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill { display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; border: 1px solid; }
+  .pill-headset  { background: #fde8d8; border-color: #f59e6b; color: #7c3a0d; }
+  .pill-handheld { background: #d8edf8; border-color: #60a5c8; color: #0c3d5e; }
+  .pill-catchbox { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
+  .dash          { color: #aaa; }
+
+  /* TIMER CHIPS */
+  .timer-chip { display: inline-block; padding: 2px 8px; border-radius: 3px; background: #fef9c3; border: 1px solid #fde047; color: #78350f; font-size: 11px; font-weight: 600; }
+
+  /* MONITOR CELL */
+  .monitor-cell { font-size: 11px; color: #444; }
+
+  /* DECK CELL */
+  .deck-cell { text-align: center; vertical-align: middle !important; }
+  .btn-deck { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; background: #1d4ed8; color: #fff; white-space: nowrap; }
+  .btn-deck:hover { background: #1e40af; }
+  .deck-pending { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: #f1f5f9; color: #94a3b8; border: 1px dashed #cbd5e1; white-space: nowrap; }
+  .deck-na { color: #ccc; font-size: 12px; }
+
+  /* DECK STATUS BAR */
+  #deck-status { font-size: 11px; padding: 5px 28px; background: #fffbeb; border-bottom: 1px solid #fde68a; color: #78350f; display: none; }
+  #deck-status.error { background: #fef2f2; border-color: #fca5a5; color: #991b1b; display: block; }
+  #deck-status.loading { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; display: block; }
+  #deck-status.loaded { background: #f0fdf4; border-color: #86efac; color: #166534; display: block; }
+
+  /* HIDDEN */
+  .day-section.hidden { display: none; }
+  tr.hidden-row { display: none; }
+
+  /* FOOTER */
+  footer { text-align: center; font-size: 11px; color: #888; border-top: 1px solid #dde0ea; padding: 14px; margin-top: 10px; }
+
+  @media print {
+    body { background: #fff; }
+    .controls, .summary-bar { display: none; }
+    .content { padding: 0; }
+    .day-section { page-break-inside: avoid; margin-bottom: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>IBM Z Design Council 2026 Fall — AV Requirements Dashboard</h1>
+  <p>IBM Z Design Council &nbsp;·&nbsp; Hilton Antwerp Old Town, Antwerp, Belgium &nbsp;·&nbsp; October 18–22, 2026 &nbsp;·&nbsp; AV Team Reference</p>
+</div>
+
+<div class="controls">
+  <div class="filter-group">
+    <label for="f-day">Day</label>
+    <select id="f-day" onchange="applyFilters()">
+      <option value="">All Days</option>
+      <option value="Sunday">Sunday</option>
+      <option value="Monday">Monday</option>
+      <option value="Tuesday">Tuesday</option>
+      <option value="Wednesday">Wednesday</option>
+      <option value="Thursday">Thursday</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label for="f-room">Room</label>
+    <select id="f-room" onchange="applyFilters()">
+      <option value="">All Rooms</option>
+      <option value="Ballroom Foyer">Ballroom Foyer</option>
+      <option value="Belle Epoque Ballroom">Belle Epoque Ballroom</option>
+      <option value="Cullinan">Cullinan</option>
+      <option value="Florentine">Florentine</option>
+      <option value="Groenplaats 1">Groenplaats 1</option>
+      <option value="Groenplaats 2">Groenplaats 2</option>
+      <option value="Groenplaats 3">Groenplaats 3</option>
+      <option value="Hope">Hope</option>
+      <option value="Sancy">Sancy</option>
+      <option value="Teun">Teun</option>
+      <option value="Tiffany/Shah">Tiffany/Shah</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label for="f-proj">Projection</label>
+    <select id="f-proj" onchange="applyFilters()">
+      <option value="">All Types</option>
+      <option value="AV Team">AV Team</option>
+      <option value="Presenter">Presenter</option>
+      <option value="Collaborative">Collaborative</option>
+      <option value="Design Fair Station">Design Fair Station</option>
+    </select>
+  </div>
+</div>
+
+<div id="deck-status" class="loading">Loading presentation decks from Box…</div>
+
+<div class="summary-bar">
+  <span>Sessions visible: <strong id="count-visible">0</strong></span>
+  <span>Requiring AV Team projection: <strong id="count-av">0</strong></span>
+</div>
+
+<div class="content" id="main-content">
+
+<!-- ═══════════════════ SUNDAY ═══════════════════ -->
+<div class="day-section" data-day="Sunday" id="day-Sunday">
+  <div class="day-header">Sunday, October 18, 2026</div>
+  <table>
+    <colgroup>
+      <col class="col-time"><col class="col-room"><col class="col-session">
+      <col class="col-speaker"><col class="col-proj"><col class="col-mic">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+    </colgroup>
+    <thead><tr>
+      <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+    </tr></thead>
+    <tbody>
+
+      <tr data-day="Sunday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">4:00pm → 5:00pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Introduction to the ZDC</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Jeff Neely, Rick Schoonmaker</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">60 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Introduction to the ZDC"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════ MONDAY ═══════════════════ -->
+<div class="day-section" data-day="Monday" id="day-Monday">
+  <div class="day-header">Monday, October 19, 2026</div>
+  <table>
+    <colgroup>
+      <col class="col-time"><col class="col-room"><col class="col-session">
+      <col class="col-speaker"><col class="col-proj"><col class="col-mic">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+    </colgroup>
+    <thead><tr>
+      <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+    </tr></thead>
+    <tbody>
+
+      <tr data-day="Monday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">8:30am → 9:00am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Welcome &amp; Plan for the Week</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Jeff Neely, Rick Schoonmaker</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">30 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Welcome &amp; Plan for the Week"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">9:00am → 9:30am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">AI on IBM Z: From Transactional Intelligence to Agentic Workflows</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Purvi Patel</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">30 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="AI on IBM Z: From Transactional Intelligence to Agentic Workflows"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Cullinan" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Cullinan</td>
+        <td><div class="session-title">Atlas for IBM Z: Discover Everything, Predict and Prevent Issues</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Roger Bales, Andrew Bowker, Andrew Sica, Meghan McGrath</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Sancy" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">From Analysis to Action: SDLC with IBM Bob Premium Package for Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ryley Wharton, Latrell Freeman, Joe Sayer</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 2" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 2</td>
+        <td><div class="session-title">AI-Powered Event Integration for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Anubhuti Kaushik, Daniel Martin, Stefanie Lauria</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Florentine" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Florentine</td>
+        <td><div class="session-title">Fit for Purpose Agentic AI for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ivan Dovgan, Jenee Hart</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 3" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 3</td>
+        <td><div class="session-title">Multiple Shared Pools</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ray Newsom, Charles Webb, Don Spangler</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Hope" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Hope</td>
+        <td><div class="session-title">Intelligent Database Operations</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Sueli Almeida, Haakon Roberts, Shelley Brand</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 1" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 1</td>
+        <td><div class="session-title">From Signals to Action</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Bryan Childs, Madhu BA</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Cullinan" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Cullinan</td>
+        <td><div class="session-title">Atlas for IBM Z: Discover Everything, Predict and Prevent Issues</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Roger Bales, Andrew Bowker, Andrew Sica, Meghan McGrath</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Sancy" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">From Analysis to Action: SDLC with IBM Bob Premium Package for Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ryley Wharton, Latrell Freeman, Joe Sayer</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 2" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 2</td>
+        <td><div class="session-title">AI-Powered Event Integration for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Anubhuti Kaushik, Daniel Martin, Stefanie Lauria</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Florentine" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Florentine</td>
+        <td><div class="session-title">Fit for Purpose Agentic AI for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ivan Dovgan, Jenee Hart</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 3" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 3</td>
+        <td><div class="session-title">Multiple Shared Pools</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ray Newsom, Charles Webb, Don Spangler</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Hope" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Hope</td>
+        <td><div class="session-title">Intelligent Database Operations</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Sueli Almeida, Haakon Roberts, Shelley Brand</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Groenplaats 1" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 1</td>
+        <td><div class="session-title">From Signals to Action</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Bryan Childs, Madhu BA</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">4:00pm → 4:15pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Flex Time Kickoff</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Jeff Neely, Rick Schoonmaker</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">15 min</span></td>
+        <td class="monitor-cell">—</td>
+        <td class="deck-cell" data-session-key="Flex Time Kickoff"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Belle Epoque Ballroom" data-proj="Presenter">
+        <td class="time-cell">4:15pm → 5:00pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Generic Data Architecture, Data Discovery on Z</div><div class="session-type">Client Roundtable</div></td>
+        <td class="speaker-cell">Sueli Almeida, Andrew Sica</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Teun" data-proj="Presenter">
+        <td class="time-cell">4:15pm → 5:00pm</td>
+        <td class="room-cell">Teun</td>
+        <td><div class="session-title">The Frontier Model Era: Transforming the IBM Z Security Landscape</div><div class="session-type">Client Roundtable</div></td>
+        <td class="speaker-cell">Pradeep Parameshwaran</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">IBM Atlas: System Intelligence That Discovers Everything</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Meghan McGrath</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">Would You Trust an AI Agent With This?</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Jenee Hart</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">IBM Vault Premium Package for z/OS: Native Certificate &amp; Secrets Management</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Chris Brynes</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">Software Management-as-Code — IBM Z Install</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Mike Young</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">IBM Project Polaris Tech Preview 2.0 and Beyond</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Roger Bales</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">Workload Expansion: The Future of IBM Z and LinuxONE</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Anthony Cocuzza</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">From Client Configuration Data to Simplification Signals</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Shelley Brand</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
+        <td class="time-cell">4:15pm → 7:00pm</td>
+        <td class="room-cell">Ballroom Foyer</td>
+        <td><div class="session-title">What Is Your Mainframe Not Telling You?</div><div class="session-type">Z Design Fair</div></td>
+        <td class="speaker-cell">Anubhuti Kaushik</td>
+        <td><span class="badge badge-fair">Design Fair Station</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════ TUESDAY ═══════════════════ -->
+<div class="day-section" data-day="Tuesday" id="day-Tuesday">
+  <div class="day-header">Tuesday, October 20, 2026</div>
+  <table>
+    <colgroup>
+      <col class="col-time"><col class="col-room"><col class="col-session">
+      <col class="col-speaker"><col class="col-proj"><col class="col-mic">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+    </colgroup>
+    <thead><tr>
+      <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+    </tr></thead>
+    <tbody>
+
+      <tr data-day="Tuesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">8:30am → 9:30am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Opening Keynote — Designing the Future of Computing</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Juan Bernabe Moreno</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">60 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Opening Keynote — Designing the Future of Computing"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Cullinan" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Cullinan</td>
+        <td><div class="session-title">Atlas for IBM Z: Discover Everything, Predict and Prevent Issues</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Roger Bales, Andrew Bowker, Andrew Sica, Meghan McGrath</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Sancy" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">From Analysis to Action: SDLC with IBM Bob Premium Package for Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ryley Wharton, Latrell Freeman, Joe Sayer</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 2" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 2</td>
+        <td><div class="session-title">AI-Powered Event Integration for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Anubhuti Kaushik, Daniel Martin, Stefanie Lauria</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Florentine" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Florentine</td>
+        <td><div class="session-title">Fit for Purpose Agentic AI for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ivan Dovgan, Jenee Hart</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 3" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 3</td>
+        <td><div class="session-title">Multiple Shared Pools</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ray Newsom, Charles Webb, Don Spangler</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Hope" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Hope</td>
+        <td><div class="session-title">Intelligent Database Operations</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Sueli Almeida, Haakon Roberts, Shelley Brand</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 1" data-proj="Collaborative">
+        <td class="time-cell">10:00am → 12:00pm</td>
+        <td class="room-cell">Groenplaats 1</td>
+        <td><div class="session-title">From Signals to Action</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Bryan Childs, Madhu BA</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Cullinan" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Cullinan</td>
+        <td><div class="session-title">Atlas for IBM Z: Discover Everything, Predict and Prevent Issues</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Roger Bales, Andrew Bowker, Andrew Sica, Meghan McGrath</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Sancy" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">From Analysis to Action: SDLC with IBM Bob Premium Package for Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ryley Wharton, Latrell Freeman, Joe Sayer</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 2" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 2</td>
+        <td><div class="session-title">AI-Powered Event Integration for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Anubhuti Kaushik, Daniel Martin, Stefanie Lauria</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Florentine" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Florentine</td>
+        <td><div class="session-title">Fit for Purpose Agentic AI for IBM Z</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ivan Dovgan, Jenee Hart</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 3" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 3</td>
+        <td><div class="session-title">Multiple Shared Pools</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Ray Newsom, Charles Webb, Don Spangler</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Hope" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Hope</td>
+        <td><div class="session-title">Intelligent Database Operations</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Sueli Almeida, Haakon Roberts, Shelley Brand</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Groenplaats 1" data-proj="Collaborative">
+        <td class="time-cell">1:30pm → 3:30pm</td>
+        <td class="room-cell">Groenplaats 1</td>
+        <td><div class="session-title">From Signals to Action</div><div class="session-type">Collaborative Session</div></td>
+        <td class="speaker-cell">Bryan Childs, Madhu BA</td>
+        <td><span class="badge badge-collab">Collaborative</span></td>
+        <td><span class="dash">—</span></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">4:00pm → 5:00pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Continuing IBM Z Full-Stack Simplification</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Mike Young</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">60 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Continuing IBM Z Full-Stack Simplification"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Tuesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">5:00pm → 5:45pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Reimagining Mainframe Engineering Across the Stack</div><div class="session-type">Client Experience</div></td>
+        <td class="speaker-cell">Shelley Brand, Mustafa Gulkara, Marcel van Ree, Alexander Straub</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">45 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Reimagining Mainframe Engineering Across the Stack"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════ WEDNESDAY ═══════════════════ -->
+<div class="day-section" data-day="Wednesday" id="day-Wednesday">
+  <div class="day-header">Wednesday, October 21, 2026</div>
+  <table>
+    <colgroup>
+      <col class="col-time"><col class="col-room"><col class="col-session">
+      <col class="col-speaker"><col class="col-proj"><col class="col-mic">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+    </colgroup>
+    <thead><tr>
+      <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+    </tr></thead>
+    <tbody>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">9:30am → 10:30am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Managing my Db2 &amp; IMS Systems with Z Database Assistant</div><div class="session-type">Client Experience</div></td>
+        <td class="speaker-cell">Sueli Almeida, Martin Alund (Handelsbanken), Thomas Lucey (US Bank)</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">30 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Managing my Db2 &amp; IMS Systems with Z Database Assistant"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">11:00am → 12:00pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Elianne Bravo, Anthony Cocuzza</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">Yes</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">1:30pm → 2:15pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Project Polaris Roadmap: Leading to the z/OS Next GA Experience</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Andrew Sica</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Project Polaris Roadmap: Leading to the z/OS Next GA Experience"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Teun" data-proj="Presenter">
+        <td class="time-cell">1:30pm → 2:15pm</td>
+        <td class="room-cell">Teun</td>
+        <td><div class="session-title">Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Reid Copeland</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Sancy" data-proj="Presenter">
+        <td class="time-cell">1:30pm → 2:15pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">Z Database Assistant Update and Journey</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Sueli Almeida</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Tiffany/Shah" data-proj="Presenter">
+        <td class="time-cell">1:30pm → 2:15pm</td>
+        <td class="room-cell">Tiffany/Shah</td>
+        <td><div class="session-title">Part 1: IBM Z Security Transformation</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Bryan Childs, Robert Enochs</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">2:30pm → 3:30pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">The Geometry of Intelligence</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Donna Dillenberger</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">60 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="The Geometry of Intelligence"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">4:00pm → 4:45pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Expedite Problem Diagnosis in Z Operations</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Domenico D'Alterio</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">45 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Expedite Problem Diagnosis in Z Operations"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Sancy" data-proj="Presenter">
+        <td class="time-cell">4:00pm → 4:45pm</td>
+        <td class="room-cell">Sancy</td>
+        <td><div class="session-title">Unlocking IBM Z Data for AI and Real-Time Decisioning</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Daniel Martin</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Teun" data-proj="Presenter">
+        <td class="time-cell">4:00pm → 4:45pm</td>
+        <td class="room-cell">Teun</td>
+        <td><div class="session-title">Advancing Agentic AI Governance with Security, Traceability, and Transparency</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Madhu B A, Elpida Tzortzatos</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Tiffany/Shah" data-proj="Presenter">
+        <td class="time-cell">4:00pm → 4:45pm</td>
+        <td class="room-cell">Tiffany/Shah</td>
+        <td><div class="session-title">Part 2: New Product Innovation in IBM Z Security SW</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Madhu B A</td>
+        <td><span class="badge badge-pres">Presenter</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
+      </tr>
+
+      <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">5:00pm → 5:45pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Agentic Management of Infrastructure Resources in a Sovereign Compute Environment</div><div class="session-type">Solution Review</div></td>
+        <td class="speaker-cell">Christopher Byrnes</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
+        <td><span class="timer-chip">45 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Agentic Management of Infrastructure Resources in a Sovereign Compute Environment"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════ THURSDAY ═══════════════════ -->
+<div class="day-section" data-day="Thursday" id="day-Thursday">
+  <div class="day-header">Thursday, October 22, 2026</div>
+  <table>
+    <colgroup>
+      <col class="col-time"><col class="col-room"><col class="col-session">
+      <col class="col-speaker"><col class="col-proj"><col class="col-mic">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+    </colgroup>
+    <thead><tr>
+      <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+    </tr></thead>
+    <tbody>
+
+      <tr data-day="Thursday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">8:30am → 9:00am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">How IBM Bob Is Changing the Game for Mainframe Developers</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Rich Larin</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">30 min</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="How IBM Bob Is Changing the Game for Mainframe Developers"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Thursday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">9:00am → 10:00am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Collaborative Session Playbacks (Round 1)</div><div class="session-type">Collaborative Session Playbacks</div></td>
+        <td class="speaker-cell">—</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">15x4</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 1)"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Thursday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">10:30am → 11:30am</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Collaborative Session Playbacks (Round 2)</div><div class="session-type">Collaborative Session Playbacks</div></td>
+        <td class="speaker-cell">—</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="timer-chip">15x4</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 2)"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+      <tr data-day="Thursday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
+        <td class="time-cell">11:30am → 12:00pm</td>
+        <td class="room-cell">Belle Epoque Ballroom</td>
+        <td><div class="session-title">Final Wrap-Up</div><div class="session-type">General Session</div></td>
+        <td class="speaker-cell">Jeff Neely, Rick Schoonmaker</td>
+        <td><span class="badge badge-av">AV Team</span></td>
+        <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
+        <td><span class="dash">—</span></td>
+        <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="deck-cell" data-session-key="Final Wrap-Up"><span class="deck-pending">Pending</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+</div><!-- /content -->
+
+<footer>ZDC 2026 Fall — AV Dashboard — Generated by IBM Bob &nbsp;·&nbsp; October 2, 2026</footer>
+
+<script>
+// ─── Live deck links from GitHub (av-files.json) ────────────────────────────
+// Repo:      https://github.com/ibmzdc/av-dashboard-2026
+// Dashboard: https://ibmzdc.github.io/av-dashboard-2026/
+// To update a deck link: edit av-files.json → commit & push → live within ~30s
+var AV_FILES_URL = 'https://raw.githubusercontent.com/ibmzdc/av-dashboard-2026/main/av-files.json';
+
+function injectDeckLinks(sessions) {
+  document.querySelectorAll('td.deck-cell[data-session-key]').forEach(function(cell) {
+    var key = cell.getAttribute('data-session-key');
+    // decode HTML entities in the key to match JSON keys
+    var tmp = document.createElement('textarea');
+    tmp.innerHTML = key;
+    var decodedKey = tmp.value;
+    var entry = sessions[decodedKey];
+    if (entry && entry.url && entry.url.trim() !== '') {
+      cell.innerHTML = '<a class="btn-deck" href="' + entry.url + '" target="_blank" rel="noopener">&#8681; Download</a>';
+    } else {
+      cell.innerHTML = '<span class="deck-pending">Pending</span>';
+    }
+  });
+}
+
+function setDeckStatus(cls, msg) {
+  var bar = document.getElementById('deck-status');
+  bar.className = cls;
+  bar.textContent = msg;
+  if (cls === 'loaded') {
+    setTimeout(function() { bar.style.display = 'none'; }, 4000);
+  }
+}
+
+fetch(AV_FILES_URL)
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function(data) {
+    injectDeckLinks(data.sessions || {});
+    var total = Object.keys(data.sessions || {}).length;
+    var ready = Object.values(data.sessions || {}).filter(function(s){ return s.url && s.url.trim(); }).length;
+    setDeckStatus('loaded', '✓ Deck links loaded — ' + ready + ' of ' + total + ' decks available');
+  })
+  .catch(function(err) {
+    setDeckStatus('error', '⚠ Could not load deck links (' + err.message + '). Check that av-files.json is accessible, or open the dashboard from a web server.');
+  });
+
+// ─── FILTERS ────────────────────────────────────────────────────────────────
+function applyFilters() {
+  var day = document.getElementById('f-day').value;
+  var room = document.getElementById('f-room').value;
+  var proj = document.getElementById('f-proj').value;
+
+  var sections = document.querySelectorAll('.day-section');
+  var totalVisible = 0;
+  var totalAV = 0;
+
+  sections.forEach(function(section) {
+    var sectionDay = section.getAttribute('data-day');
+    var rows = section.querySelectorAll('tbody tr');
+    var sectionHasVisible = false;
+
+    rows.forEach(function(row) {
+      var rDay = row.getAttribute('data-day');
+      var rRoom = row.getAttribute('data-room');
+      var rProj = row.getAttribute('data-proj');
+
+      var projNorm = rProj.toLowerCase().replace(/\s+/g,'');
+      var filterProjNorm = proj.toLowerCase().replace(/\s+/g,'');
+
+      var dayMatch = !day || rDay === day;
+      var roomMatch = !room || rRoom === room;
+      var projMatch = !proj || projNorm.indexOf(filterProjNorm) !== -1;
+
+      if (dayMatch && roomMatch && projMatch) {
+        row.classList.remove('hidden-row');
+        totalVisible++;
+        if (rProj.toLowerCase().indexOf('av team') !== -1) totalAV++;
+        sectionHasVisible = true;
+      } else {
+        row.classList.add('hidden-row');
+      }
+    });
+
+    var dayHidden = day && sectionDay !== day;
+    section.classList.toggle('hidden', dayHidden || !sectionHasVisible);
+  });
+
+  document.getElementById('count-visible').textContent = totalVisible;
+  document.getElementById('count-av').textContent = totalAV;
+}
+
+// Initialize on load
+applyFilters();
+</script>
+
+</body>
+</html>

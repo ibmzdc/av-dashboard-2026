@@ -1,0 +1,108 @@
+{
+  "_readme": [
+    "HOW TO UPDATE DECK LINKS:",
+    "",
+    "When a presentation deck is ready:",
+    "  1. Upload the file (PPT or PDF) to Box",
+    "  2. Right-click → Share → Copy Shared Link",
+    "  3. Find the matching session below",
+    "  4. Set its 'url' field to the Box shared link",
+    "  5. Save this file, commit and push to GitHub",
+    "  6. The dashboard updates live within ~30 seconds — no other changes needed",
+    "",
+    "To clear a link (e.g. wrong file uploaded): set 'url' back to empty string ''",
+    "",
+    "Dashboard URL: https://ibmzdc.github.io/av-dashboard-2026/",
+    "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
+  ],
+  "_version": "1.1",
+  "_updated": "2026-10-02",
+
+  "sessions": {
+    "Introduction to the ZDC": {
+      "url": "",
+      "label": "Introduction to the ZDC",
+      "day": "Sunday"
+    },
+    "Welcome & Plan for the Week": {
+      "url": "",
+      "label": "Welcome & Plan for the Week",
+      "day": "Monday"
+    },
+    "AI on IBM Z: From Transactional Intelligence to Agentic Workflows": {
+      "url": "",
+      "label": "AI on IBM Z: From Transactional Intelligence to Agentic Workflows",
+      "day": "Monday"
+    },
+    "Flex Time Kickoff": {
+      "url": "",
+      "label": "Flex Time Kickoff",
+      "day": "Monday"
+    },
+    "Opening Keynote — Designing the Future of Computing": {
+      "url": "",
+      "label": "Opening Keynote — Designing the Future of Computing",
+      "day": "Tuesday"
+    },
+    "Continuing IBM Z Full-Stack Simplification": {
+      "url": "",
+      "label": "Continuing IBM Z Full-Stack Simplification",
+      "day": "Tuesday"
+    },
+    "Reimagining Mainframe Engineering Across the Stack": {
+      "url": "",
+      "label": "Reimagining Mainframe Engineering Across the Stack",
+      "day": "Tuesday"
+    },
+    "Managing my Db2 & IMS Systems with Z Database Assistant": {
+      "url": "",
+      "label": "Managing my Db2 & IMS Systems with Z Database Assistant",
+      "day": "Wednesday"
+    },
+    "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
+      "url": "",
+      "label": "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion",
+      "day": "Wednesday"
+    },
+    "Project Polaris Roadmap: Leading to the z/OS Next GA Experience": {
+      "url": "",
+      "label": "Project Polaris Roadmap: Leading to the z/OS Next GA Experience",
+      "day": "Wednesday"
+    },
+    "The Geometry of Intelligence": {
+      "url": "",
+      "label": "The Geometry of Intelligence",
+      "day": "Wednesday"
+    },
+    "Expedite Problem Diagnosis in Z Operations": {
+      "url": "",
+      "label": "Expedite Problem Diagnosis in Z Operations",
+      "day": "Wednesday"
+    },
+    "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment": {
+      "url": "",
+      "label": "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment",
+      "day": "Wednesday"
+    },
+    "How IBM Bob Is Changing the Game for Mainframe Developers": {
+      "url": "",
+      "label": "How IBM Bob Is Changing the Game for Mainframe Developers",
+      "day": "Thursday"
+    },
+    "Collaborative Session Playbacks (Round 1)": {
+      "url": "",
+      "label": "Collaborative Session Playbacks (Round 1)",
+      "day": "Thursday"
+    },
+    "Collaborative Session Playbacks (Round 2)": {
+      "url": "",
+      "label": "Collaborative Session Playbacks (Round 2)",
+      "day": "Thursday"
+    },
+    "Final Wrap-Up": {
+      "url": "",
+      "label": "Final Wrap-Up",
+      "day": "Thursday"
+    }
+  }
+}
