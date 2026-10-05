@@ -99,6 +99,30 @@
   /* PRINT TITLE (hidden on screen, shown when printing) */
   #print-title { display: none; }
 
+
+  /* RE-DOWNLOAD BADGE */
+  .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
+  @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+  /* AUDIO CELL */
+  col.col-audio { width: 90px; }
+  .audio-cell { text-align: center; vertical-align: middle !important; }
+  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; white-space: nowrap; }
+
+  /* DECK BTNS */
+  .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+  /* ALWAYS-ON PANEL */
+  .always-on-panel { background: #fff; border: 2px solid #1e2761; border-radius: 6px; margin: 18px 28px 4px; overflow: hidden; }
+  .always-on-header { background: #1e2761; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
+  .always-on-header span { font-size: 15px; }
+  .always-on-row { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border-top: 1px solid #e8eaf0; }
+  .always-on-row:first-of-type { border-top: none; }
+  .always-on-info { flex: 1; }
+  .always-on-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+  .always-on-desc { font-size: 11px; color: #666; margin-top: 2px; }
+  .always-on-btn { flex-shrink: 0; min-width: 110px; text-align: center; }
+
   /* DECK STATUS BAR */
   #deck-status { font-size: 11px; padding: 5px 28px; background: #fffbeb; border-bottom: 1px solid #fde68a; color: #78350f; display: none; }
   #deck-status.error { background: #fef2f2; border-color: #fca5a5; color: #991b1b; display: block; }
@@ -134,6 +158,8 @@
   <h1>IBM Z Design Council 2026 Fall — AV Requirements Dashboard</h1>
   <p>IBM Z Design Council &nbsp;·&nbsp; Hilton Antwerp Old Town, Antwerp, Belgium &nbsp;·&nbsp; October 18–22, 2026 &nbsp;·&nbsp; AV Team Reference</p>
 </div>
+
+<div id="print-title"></div>
 
 <div class="controls">
   <div class="filter-group">
@@ -174,9 +200,58 @@
       <option value="Design Fair Station">Design Fair Station</option>
     </select>
   </div>
+  <div class="print-group">
+    <select id="print-scope">
+      <option value="all">Print: All Sessions</option>
+      <optgroup label="── By Day ──">
+        <option value="day:Sunday">Sunday, Oct 18</option>
+        <option value="day:Monday">Monday, Oct 19</option>
+        <option value="day:Tuesday">Tuesday, Oct 20</option>
+        <option value="day:Wednesday">Wednesday, Oct 21</option>
+        <option value="day:Thursday">Thursday, Oct 22</option>
+      </optgroup>
+      <optgroup label="── By Room ──">
+        <option value="room:Ballroom Foyer">Ballroom Foyer</option>
+        <option value="room:Belle Epoque Ballroom">Belle Epoque Ballroom</option>
+        <option value="room:Cullinan">Cullinan</option>
+        <option value="room:Florentine">Florentine</option>
+        <option value="room:Groenplaats 1">Groenplaats 1</option>
+        <option value="room:Groenplaats 2">Groenplaats 2</option>
+        <option value="room:Groenplaats 3">Groenplaats 3</option>
+        <option value="room:Hope">Hope</option>
+        <option value="room:Sancy">Sancy</option>
+        <option value="room:Teun">Teun</option>
+        <option value="room:Tiffany/Shah">Tiffany/Shah</option>
+      </optgroup>
+    </select>
+    <button class="btn-print" onclick="doPrint()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+  </div>
 </div>
 
+
 <div id="deck-status" class="loading">Loading presentation decks from Box…</div>
+
+<!-- ⚡ ALWAYS-ON ASSETS (pinned, not affected by filters) -->
+<div class="always-on-panel">
+  <div class="always-on-header"><span>⚡</span> Always-On Assets</div>
+  <div class="always-on-row" id="ao-Holding Slide">
+    <div class="always-on-info">
+      <div class="always-on-title">Holding Slide</div>
+      <div class="always-on-desc">Shown before event start and during all breaks</div>
+    </div>
+    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
+  </div>
+  <div class="always-on-row" id="ao-Opening Video">
+    <div class="always-on-info">
+      <div class="always-on-title">Opening Video</div>
+      <div class="always-on-desc">Played at event start</div>
+    </div>
+    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
+  </div>
+</div>
 
 <div class="summary-bar">
   <span>Sessions visible: <strong id="count-visible">0</strong></span>
@@ -192,11 +267,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -209,6 +284,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Introduction to the ZDC"></td>
         <td class="deck-cell" data-session-key="Introduction to the ZDC"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -223,11 +299,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -240,6 +316,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Welcome &amp; Plan for the Week"></td>
         <td class="deck-cell" data-session-key="Welcome &amp; Plan for the Week"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -252,6 +329,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="AI on IBM Z: From Transactional Intelligence to Agentic Workflows"></td>
         <td class="deck-cell" data-session-key="AI on IBM Z: From Transactional Intelligence to Agentic Workflows"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -264,6 +342,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -276,6 +355,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -288,6 +368,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -300,6 +381,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -312,6 +394,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -324,6 +407,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -336,6 +420,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -348,6 +433,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -360,6 +446,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -372,6 +459,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -384,6 +472,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -396,6 +485,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -408,6 +498,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -420,6 +511,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -432,6 +524,7 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15 min</span></td>
         <td class="monitor-cell">—</td>
+        <td class="audio-cell" data-session-key="Flex Time Kickoff"></td>
         <td class="deck-cell" data-session-key="Flex Time Kickoff"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -444,6 +537,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -456,6 +550,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -468,6 +563,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -480,6 +576,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -492,6 +589,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -504,6 +602,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -516,6 +615,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -528,6 +628,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -540,6 +641,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -552,6 +654,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -566,11 +669,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -583,6 +686,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Opening Keynote — Designing the Future of Computing"></td>
         <td class="deck-cell" data-session-key="Opening Keynote — Designing the Future of Computing"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -595,6 +699,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -607,6 +712,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -619,6 +725,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -631,6 +738,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -643,6 +751,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -655,6 +764,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -667,6 +777,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -679,6 +790,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -691,6 +803,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -703,6 +816,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -715,6 +829,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -727,6 +842,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -739,6 +855,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -751,6 +868,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -763,6 +881,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Continuing IBM Z Full-Stack Simplification"></td>
         <td class="deck-cell" data-session-key="Continuing IBM Z Full-Stack Simplification"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -775,6 +894,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Reimagining Mainframe Engineering Across the Stack"></td>
         <td class="deck-cell" data-session-key="Reimagining Mainframe Engineering Across the Stack"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -789,11 +909,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -806,6 +926,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Managing my Db2 &amp; IMS Systems with Z Database Assistant"></td>
         <td class="deck-cell" data-session-key="Managing my Db2 &amp; IMS Systems with Z Database Assistant"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -818,6 +939,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion"></td>
         <td class="deck-cell" data-session-key="The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -830,6 +952,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Project Polaris Roadmap: Leading to the z/OS Next GA Experience"></td>
         <td class="deck-cell" data-session-key="Project Polaris Roadmap: Leading to the z/OS Next GA Experience"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -842,6 +965,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -854,6 +978,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -866,6 +991,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -878,6 +1004,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="The Geometry of Intelligence"></td>
         <td class="deck-cell" data-session-key="The Geometry of Intelligence"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -890,6 +1017,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Expedite Problem Diagnosis in Z Operations"></td>
         <td class="deck-cell" data-session-key="Expedite Problem Diagnosis in Z Operations"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -902,6 +1030,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -914,6 +1043,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -926,6 +1056,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
+        <td class="audio-cell"></td>
         <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
@@ -938,6 +1069,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Agentic Management of Infrastructure Resources in a Sovereign Compute Environment"></td>
         <td class="deck-cell" data-session-key="Agentic Management of Infrastructure Resources in a Sovereign Compute Environment"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -952,11 +1084,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -969,6 +1101,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="How IBM Bob Is Changing the Game for Mainframe Developers"></td>
         <td class="deck-cell" data-session-key="How IBM Bob Is Changing the Game for Mainframe Developers"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -981,6 +1114,7 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15x4</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Collaborative Session Playbacks (Round 1)"></td>
         <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 1)"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -993,6 +1127,7 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15x4</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Collaborative Session Playbacks (Round 2)"></td>
         <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 2)"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1005,6 +1140,7 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
+        <td class="audio-cell" data-session-key="Final Wrap-Up"></td>
         <td class="deck-cell" data-session-key="Final Wrap-Up"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1127,6 +1263,40 @@ function doPrint() {
 }
 
 // ─── FILTERS ────────────────────────────────────────────────────────────────────────────
+function doPrint() {
+  var scope = document.getElementById('print-scope').value;
+  var titleEl = document.getElementById('print-title');
+  document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+  document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+  if (scope === 'all') {
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — All Sessions';
+  } else if (scope.indexOf('day:') === 0) {
+    var day = scope.slice(4);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — ' + (DAY_LABELS[day] || day);
+    document.querySelectorAll('.day-section').forEach(function(s) {
+      if (s.getAttribute('data-day') !== day) s.classList.add('print-hidden');
+    });
+  } else if (scope.indexOf('room:') === 0) {
+    var room = scope.slice(5);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — ' + room;
+    document.querySelectorAll('.day-section').forEach(function(section) {
+      var rows = section.querySelectorAll('tbody tr');
+      var anyVisible = false;
+      rows.forEach(function(row) {
+        if (row.getAttribute('data-room') !== room) { row.classList.add('print-hidden-row'); } else { anyVisible = true; }
+      });
+      if (!anyVisible) section.classList.add('print-hidden');
+    });
+  }
+  window.print();
+  setTimeout(function() {
+    document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+    document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+    titleEl.textContent = '';
+  }, 1000);
+}
+
+// ─── FILTERS ────────────────────────────────────────────────────────────────────────────
 function applyFilters() {
   var day = document.getElementById('f-day').value;
   var room = document.getElementById('f-room').value;
@@ -1173,6 +1343,7 @@ function applyFilters() {
 
 // Initialize on load
 applyFilters();
+
 
 </script>
 

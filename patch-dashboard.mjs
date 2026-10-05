@@ -103,8 +103,8 @@ const CSS_INSERT_REDOWNLOAD = `
 
 `;
 
-// Print CSS patch (idempotent)
-if (!html.includes('.print-group')) {
+// Print CSS patch (idempotent — check for the button class, not the @media rule)
+if (!html.includes('.btn-print {')) {
   html = html.replace(CSS_MARKER, CSS_INSERT + CSS_MARKER);
   // Also replace the existing bare @media print block with the enhanced one
   html = html.replace(/(\s*@media print \{[\s\S]*?\n  \})/m, '\n' + PRINT_MEDIA_REPLACE);
@@ -113,8 +113,8 @@ if (!html.includes('.print-group')) {
   console.log('⏭  Print CSS already present — skipped');
 }
 
-// AV / Always-On CSS patch (idempotent)
-if (!html.includes('.always-on-panel')) {
+// AV / Always-On CSS patch (idempotent — check for the panel CSS rule itself)
+if (!html.includes('.always-on-panel {')) {
   html = html.replace(CSS_MARKER, CSS_INSERT_REDOWNLOAD + CSS_MARKER);
   console.log('✅  AV/Always-On CSS patch applied');
 } else {
@@ -147,7 +147,7 @@ const HTML_INSERT = `
 
 `;
 
-if (!html.includes('always-on-panel')) {
+if (!html.includes('ao-Holding Slide')) {
   // Remove any existing bare deck-status div (regenerator may have written one)
   html = html.replace(/<div id="deck-status"[^>]*>[^<]*<\/div>\s*/g, '');
   html = html.replace(HTML_MARKER, HTML_INSERT + HTML_MARKER);
@@ -194,7 +194,7 @@ const PRINT_CONTROLS_INSERT = `\n  <div class="print-group">
 
 `;
 
-if (!html.includes('print-group')) {
+if (!html.includes('id="print-scope"')) {
   // Insert #print-title div just before the controls bar
   html = html.replace(PRINT_TITLE_MARKER, PRINT_TITLE_INSERT + PRINT_TITLE_MARKER);
   // Close existing </div>\n</div> of projection filter group, then append print controls before deck-status
@@ -205,7 +205,7 @@ if (!html.includes('print-group')) {
 }
 
 // ── 3. Table patch — add Audio column to all colgroups, theads, tbody rows ───
-if (!html.includes('col-audio')) {
+if (!html.includes('<th>Audio</th>')) {
   // Add col-audio before col-deck in all colgroups
   html = html.replace(/<col class="col-timer"><col class="col-monitor"><col class="col-deck">/g,
     '<col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">');
