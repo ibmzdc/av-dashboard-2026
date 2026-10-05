@@ -29,8 +29,12 @@
     "Admin URL:     https://ibmzdc.github.io/av-dashboard-2026/admin.html",
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
-  "_version": "1.4",
+  "_version": "1.5",
   "_updated": "2026-10-02",
+  "download_all": {
+    "url": "",
+    "label": "Download All Decks"
+  },
   "always_on": {
     "Holding Slide": {
       "url": "https://ibm.box.com/s/tram6clhgjz7yswrdgspnqmkujj6rh23",

@@ -86,6 +86,16 @@
   .btn-secondary:hover { background: #e2e8f0; }
   .save-note { font-size: 11px; color: #888; }
 
+  /* DOWNLOAD ALL */
+  .download-all-panel { background: #fff; border: 2px solid #1d4ed8; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+  .download-all-header { background: #1d4ed8; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .download-all-body { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .download-all-body label { font-size: 12px; color: #555; white-space: nowrap; font-weight: 600; }
+  .download-all-body input { flex: 1; padding: 7px 10px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #1a1a2e; background: #f9fafb; }
+  .download-all-body input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; background: #fff; }
+  .download-all-body input.has-url { border-color: #86efac; background: #f0fdf4; }
+  .download-all-body .hint { font-size: 11px; color: #888; white-space: nowrap; }
+
   /* LEGEND */
   .legend { display: flex; gap: 16px; font-size: 11px; color: #666; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
   .legend span { display: flex; align-items: center; gap: 5px; }
@@ -142,6 +152,7 @@
     <span><span class="legend-swatch" style="background:#991b1b"></span> XLR Feed — session requires XLR audio feed</span>
   </div>
 
+  <div id="download-all-container"></div>
   <div id="always-on-container"></div>
   <div id="sessions-container"></div>
 
@@ -221,6 +232,7 @@ function loadData() {
       fileSha = meta.sha;
       var content = atob(meta.content.replace(/\n/g,''));
       jsonData = JSON.parse(content);
+      renderDownloadAll(jsonData.download_all || {});
       renderAlwaysOn(jsonData.always_on || {});
       renderSessions(jsonData.sessions);
       var linked = Object.values(jsonData.sessions).filter(function(s){ return s.url && s.url.trim(); }).length;
@@ -230,6 +242,48 @@ function loadData() {
     .catch(function(err) {
       setStatus('error', '✗ ' + err.message);
     });
+}
+
+// ── Render Download All panel ─────────────────────────────────────────────────
+function renderDownloadAll(data) {
+  var container = document.getElementById('download-all-container');
+  container.innerHTML = '';
+
+  var panel = document.createElement('div');
+  panel.className = 'download-all-panel';
+
+  var header = document.createElement('div');
+  header.className = 'download-all-header';
+  header.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All Decks — Box Folder Link';
+  panel.appendChild(header);
+
+  var body = document.createElement('div');
+  body.className = 'download-all-body';
+
+  var lbl = document.createElement('label');
+  lbl.htmlFor = 'download-all-url';
+  lbl.textContent = 'Box folder URL:';
+
+  var input = document.createElement('input');
+  input.type = 'url';
+  input.id = 'download-all-url';
+  input.placeholder = 'Paste Box shared folder link here (AV team will see a Download All button)…';
+  input.value = data.url || '';
+  if (data.url && data.url.trim()) input.classList.add('has-url');
+  input.addEventListener('input', function() {
+    this.classList.toggle('has-url', this.value.trim() !== '');
+    markDirty();
+  });
+
+  var hint = document.createElement('span');
+  hint.className = 'hint';
+  hint.textContent = 'Box → Share → Copy link';
+
+  body.appendChild(lbl);
+  body.appendChild(input);
+  body.appendChild(hint);
+  panel.appendChild(body);
+  container.appendChild(panel);
 }
 
 // ── Render session rows grouped by day ───────────────────────────────────────
@@ -520,6 +574,14 @@ function markDirty() {
 
 // ── Collect current values from form ─────────────────────────────────────────
 function collectValues() {
+  // Download All folder URL
+  var daInput = document.getElementById('download-all-url');
+  if (daInput) {
+    if (!jsonData.download_all) jsonData.download_all = {};
+    jsonData.download_all.url = daInput.value.trim();
+    jsonData.download_all.label = 'Download All Decks';
+  }
+
   document.querySelectorAll('.url-input input').forEach(function(input) {
     var key = input.dataset.key;
     var section = input.dataset.section;

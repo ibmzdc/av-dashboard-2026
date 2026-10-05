@@ -116,6 +116,9 @@
   .always-on-panel { background: #fff; border: 2px solid #1e2761; border-radius: 6px; margin: 18px 28px 4px; overflow: hidden; }
   .always-on-header { background: #1e2761; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
   .always-on-header span { font-size: 15px; }
+  .btn-download-all { display: none; margin-left: auto; padding: 4px 14px; background: #1d4ed8; color: #fff; border-radius: 4px; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; border: 1px solid #1d4ed8; }
+  .btn-download-all:hover { background: #1e40af; border-color: #1e40af; }
+  .btn-download-all.visible { display: inline-flex; align-items: center; gap: 6px; }
   .always-on-row { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border-top: 1px solid #e8eaf0; }
   .always-on-row:first-of-type { border-top: none; }
   .always-on-info { flex: 1; }
@@ -236,7 +239,13 @@
 
 <!-- ⚡ ALWAYS-ON ASSETS (pinned, not affected by filters) -->
 <div class="always-on-panel">
-  <div class="always-on-header"><span>⚡</span> Always-On Assets</div>
+  <div class="always-on-header">
+    <span>⚡</span> Always-On Assets
+    <a id="btn-download-all" class="btn-download-all" href="#" target="_blank" rel="noopener">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download All Decks
+    </a>
+  </div>
   <div class="always-on-row" id="ao-Holding Slide">
     <div class="always-on-info">
       <div class="always-on-title">Holding Slide</div>
@@ -1169,7 +1178,19 @@ function deckHTML(entry) {
   return '<span class="deck-pending">Pending</span>';
 }
 
-function injectDeckLinks(sessions, alwaysOn) {
+function injectDeckLinks(sessions, alwaysOn, downloadAll) {
+  // Download All button
+  var daBtn = document.getElementById('btn-download-all');
+  if (daBtn) {
+    var daUrl = downloadAll && downloadAll.url && downloadAll.url.trim();
+    if (daUrl) {
+      daBtn.href = daUrl;
+      daBtn.classList.add('visible');
+    } else {
+      daBtn.classList.remove('visible');
+    }
+  }
+
   // Session deck cells
   document.querySelectorAll('td.deck-cell[data-session-key]').forEach(function(cell) {
     var key = cell.getAttribute('data-session-key');
@@ -1211,7 +1232,7 @@ fetch(AV_FILES_URL)
     return r.json();
   })
   .then(function(data) {
-    injectDeckLinks(data.sessions || {}, data.always_on || {});
+    injectDeckLinks(data.sessions || {}, data.always_on || {}, data.download_all || {});
     var total = Object.keys(data.sessions || {}).length;
     var ready = Object.values(data.sessions || {}).filter(function(s){ return s.url && s.url.trim(); }).length;
     setDeckStatus('loaded', '✓ Deck links loaded — ' + ready + ' of ' + total + ' decks available');
