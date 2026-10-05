@@ -89,28 +89,15 @@
   .deck-na { color: #ccc; font-size: 12px; }
 
 
-  /* RE-DOWNLOAD BADGE */
-  .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
-  @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+  /* PRINT BUTTON + DROPDOWN */
+  .print-group { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .btn-print { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: #1e2761; color: #fff; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-print:hover { background: #2d3a8c; }
+  .btn-print svg { flex-shrink: 0; }
+  #print-scope { font-size: 12px; padding: 5px 10px; border: 1px solid #c8d0e0; border-radius: 4px; background: #f7f8fa; color: #1a1a2e; cursor: pointer; }
 
-  /* AUDIO CELL */
-  col.col-audio { width: 90px; }
-  .audio-cell { text-align: center; vertical-align: middle !important; }
-  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; white-space: nowrap; }
-
-  /* DECK BTNS */
-  .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-
-  /* ALWAYS-ON PANEL */
-  .always-on-panel { background: #fff; border: 2px solid #1e2761; border-radius: 6px; margin: 18px 28px 4px; overflow: hidden; }
-  .always-on-header { background: #1e2761; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
-  .always-on-header span { font-size: 15px; }
-  .always-on-row { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border-top: 1px solid #e8eaf0; }
-  .always-on-row:first-of-type { border-top: none; }
-  .always-on-info { flex: 1; }
-  .always-on-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
-  .always-on-desc { font-size: 11px; color: #666; margin-top: 2px; }
-  .always-on-btn { flex-shrink: 0; min-width: 110px; text-align: center; }
+  /* PRINT TITLE (hidden on screen, shown when printing) */
+  #print-title { display: none; }
 
   /* DECK STATUS BAR */
   #deck-status { font-size: 11px; padding: 5px 28px; background: #fffbeb; border-bottom: 1px solid #fde68a; color: #78350f; display: none; }
@@ -124,13 +111,21 @@
 
   /* FOOTER */
   footer { text-align: center; font-size: 11px; color: #888; border-top: 1px solid #dde0ea; padding: 14px; margin-top: 10px; }
-
   @media print {
     body { background: #fff; }
-    .controls, .summary-bar { display: none; }
+    .controls, .summary-bar, .always-on-panel, #deck-status, footer { display: none !important; }
+    #print-title { display: block; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 15px; font-weight: 700; color: #1e2761; padding: 10px 0 6px; border-bottom: 2px solid #1e2761; margin-bottom: 14px; }
     .content { padding: 0; }
     .day-section { page-break-inside: avoid; margin-bottom: 18px; }
+    .day-section.print-hidden { display: none !important; }
+    tr.print-hidden-row { display: none !important; }
+    col.col-audio, col.col-deck,
+    thead th:nth-last-child(-n+2),
+    tbody td:nth-last-child(-n+2) { display: none !important; }
+    .badge-redownload { animation: none !important; }
+    a.btn-deck { color: #1e2761 !important; text-decoration: none !important; }
   }
+
 </style>
 </head>
 <body>
@@ -1088,6 +1083,48 @@ fetch(AV_FILES_URL)
   .catch(function(err) {
     setDeckStatus('error', '⚠ Could not load deck links (' + err.message + ').');
   });
+
+// ─── PRINT ────────────────────────────────────────────────────────────────────────────
+var DAY_LABELS = {
+  'Sunday':    'Sunday, October 18, 2026',
+  'Monday':    'Monday, October 19, 2026',
+  'Tuesday':   'Tuesday, October 20, 2026',
+  'Wednesday': 'Wednesday, October 21, 2026',
+  'Thursday':  'Thursday, October 22, 2026'
+};
+
+function doPrint() {
+  var scope = document.getElementById('print-scope').value;
+  var titleEl = document.getElementById('print-title');
+  document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+  document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+  if (scope === 'all') {
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — All Sessions';
+  } else if (scope.indexOf('day:') === 0) {
+    var day = scope.slice(4);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — ' + (DAY_LABELS[day] || day);
+    document.querySelectorAll('.day-section').forEach(function(s) {
+      if (s.getAttribute('data-day') !== day) s.classList.add('print-hidden');
+    });
+  } else if (scope.indexOf('room:') === 0) {
+    var room = scope.slice(5);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall — AV Requirements — ' + room;
+    document.querySelectorAll('.day-section').forEach(function(section) {
+      var rows = section.querySelectorAll('tbody tr');
+      var anyVisible = false;
+      rows.forEach(function(row) {
+        if (row.getAttribute('data-room') !== room) { row.classList.add('print-hidden-row'); } else { anyVisible = true; }
+      });
+      if (!anyVisible) section.classList.add('print-hidden');
+    });
+  }
+  window.print();
+  setTimeout(function() {
+    document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+    document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+    titleEl.textContent = '';
+  }, 1000);
+}
 
 // ─── FILTERS ────────────────────────────────────────────────────────────────────────────
 function applyFilters() {

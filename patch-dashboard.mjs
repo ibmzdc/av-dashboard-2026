@@ -48,6 +48,36 @@ let html = readFileSync(inputPath, 'utf8');
 // ── 1. CSS patch ─────────────────────────────────────────────────────────────
 const CSS_MARKER = '  /* DECK STATUS BAR */';
 const CSS_INSERT = `
+  /* PRINT BUTTON + DROPDOWN */
+  .print-group { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .btn-print { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: #1e2761; color: #fff; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-print:hover { background: #2d3a8c; }
+  .btn-print svg { flex-shrink: 0; }
+  #print-scope { font-size: 12px; padding: 5px 10px; border: 1px solid #c8d0e0; border-radius: 4px; background: #f7f8fa; color: #1a1a2e; cursor: pointer; }
+
+  /* PRINT TITLE (hidden on screen, shown when printing) */
+  #print-title { display: none; }
+
+`;
+
+const PRINT_MEDIA_MARKER = '  @media print {';
+const PRINT_MEDIA_REPLACE = `  @media print {
+    body { background: #fff; }
+    .controls, .summary-bar, .always-on-panel, #deck-status, footer { display: none !important; }
+    #print-title { display: block; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 15px; font-weight: 700; color: #1e2761; padding: 10px 0 6px; border-bottom: 2px solid #1e2761; margin-bottom: 14px; }
+    .content { padding: 0; }
+    .day-section { page-break-inside: avoid; margin-bottom: 18px; }
+    .day-section.print-hidden { display: none !important; }
+    tr.print-hidden-row { display: none !important; }
+    col.col-audio, col.col-deck,
+    thead th:nth-last-child(-n+2),
+    tbody td:nth-last-child(-n+2) { display: none !important; }
+    .badge-redownload { animation: none !important; }
+    a.btn-deck { color: #1e2761 !important; text-decoration: none !important; }
+  }
+`;
+
+const CSS_INSERT_REDOWNLOAD = `
   /* RE-DOWNLOAD BADGE */
   .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
   @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
@@ -73,11 +103,22 @@ const CSS_INSERT = `
 
 `;
 
-if (!html.includes('.always-on-panel')) {
+// Print CSS patch (idempotent)
+if (!html.includes('.print-group')) {
   html = html.replace(CSS_MARKER, CSS_INSERT + CSS_MARKER);
-  console.log('✅  CSS patch applied');
+  // Also replace the existing bare @media print block with the enhanced one
+  html = html.replace(/(\s*@media print \{[\s\S]*?\n  \})/m, '\n' + PRINT_MEDIA_REPLACE);
+  console.log('✅  Print CSS patch applied');
 } else {
-  console.log('⏭  CSS already present — skipped');
+  console.log('⏭  Print CSS already present — skipped');
+}
+
+// AV / Always-On CSS patch (idempotent)
+if (!html.includes('.always-on-panel')) {
+  html = html.replace(CSS_MARKER, CSS_INSERT_REDOWNLOAD + CSS_MARKER);
+  console.log('✅  AV/Always-On CSS patch applied');
+} else {
+  console.log('⏭  AV/Always-On CSS already present — skipped');
 }
 
 // ── 2. HTML patch — Always-On panel ──────────────────────────────────────────
@@ -113,6 +154,54 @@ if (!html.includes('always-on-panel')) {
   console.log('✅  Always-On HTML panel injected');
 } else {
   console.log('⏭  Always-On HTML already present — skipped');
+}
+
+// ── 2b. HTML patch — Print title div + print controls in controls bar ─────────
+const PRINT_TITLE_MARKER = '<div class="controls">';
+const PRINT_TITLE_INSERT = `<div id="print-title"></div>\n\n`;
+
+const PRINT_CONTROLS_MARKER = '</div>\n</div>\n\n<div id="deck-status"';
+const PRINT_CONTROLS_INSERT = `\n  <div class="print-group">
+    <select id="print-scope">
+      <option value="all">Print: All Sessions</option>
+      <optgroup label="── By Day ──">
+        <option value="day:Sunday">Sunday, Oct 18</option>
+        <option value="day:Monday">Monday, Oct 19</option>
+        <option value="day:Tuesday">Tuesday, Oct 20</option>
+        <option value="day:Wednesday">Wednesday, Oct 21</option>
+        <option value="day:Thursday">Thursday, Oct 22</option>
+      </optgroup>
+      <optgroup label="── By Room ──">
+        <option value="room:Ballroom Foyer">Ballroom Foyer</option>
+        <option value="room:Belle Epoque Ballroom">Belle Epoque Ballroom</option>
+        <option value="room:Cullinan">Cullinan</option>
+        <option value="room:Florentine">Florentine</option>
+        <option value="room:Groenplaats 1">Groenplaats 1</option>
+        <option value="room:Groenplaats 2">Groenplaats 2</option>
+        <option value="room:Groenplaats 3">Groenplaats 3</option>
+        <option value="room:Hope">Hope</option>
+        <option value="room:Sancy">Sancy</option>
+        <option value="room:Teun">Teun</option>
+        <option value="room:Tiffany/Shah">Tiffany/Shah</option>
+      </optgroup>
+    </select>
+    <button class="btn-print" onclick="doPrint()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+  </div>
+</div>
+
+`;
+
+if (!html.includes('print-group')) {
+  // Insert #print-title div just before the controls bar
+  html = html.replace(PRINT_TITLE_MARKER, PRINT_TITLE_INSERT + PRINT_TITLE_MARKER);
+  // Close existing </div>\n</div> of projection filter group, then append print controls before deck-status
+  html = html.replace(PRINT_CONTROLS_MARKER, PRINT_CONTROLS_INSERT + '<div id="deck-status"');
+  console.log('✅  Print controls HTML injected');
+} else {
+  console.log('⏭  Print controls HTML already present — skipped');
 }
 
 // ── 3. Table patch — add Audio column to all colgroups, theads, tbody rows ───
@@ -206,6 +295,48 @@ fetch(AV_FILES_URL)
     setDeckStatus('error', '\u26a0 Could not load deck links (' + err.message + ').');
   });
 
+// \u2500\u2500\u2500 PRINT \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+var DAY_LABELS = {
+  'Sunday':    'Sunday, October 18, 2026',
+  'Monday':    'Monday, October 19, 2026',
+  'Tuesday':   'Tuesday, October 20, 2026',
+  'Wednesday': 'Wednesday, October 21, 2026',
+  'Thursday':  'Thursday, October 22, 2026'
+};
+
+function doPrint() {
+  var scope = document.getElementById('print-scope').value;
+  var titleEl = document.getElementById('print-title');
+  document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+  document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+  if (scope === 'all') {
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall \u2014 AV Requirements \u2014 All Sessions';
+  } else if (scope.indexOf('day:') === 0) {
+    var day = scope.slice(4);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall \u2014 AV Requirements \u2014 ' + (DAY_LABELS[day] || day);
+    document.querySelectorAll('.day-section').forEach(function(s) {
+      if (s.getAttribute('data-day') !== day) s.classList.add('print-hidden');
+    });
+  } else if (scope.indexOf('room:') === 0) {
+    var room = scope.slice(5);
+    titleEl.textContent = 'IBM Z Design Council 2026 Fall \u2014 AV Requirements \u2014 ' + room;
+    document.querySelectorAll('.day-section').forEach(function(section) {
+      var rows = section.querySelectorAll('tbody tr');
+      var anyVisible = false;
+      rows.forEach(function(row) {
+        if (row.getAttribute('data-room') !== room) { row.classList.add('print-hidden-row'); } else { anyVisible = true; }
+      });
+      if (!anyVisible) section.classList.add('print-hidden');
+    });
+  }
+  window.print();
+  setTimeout(function() {
+    document.querySelectorAll('.day-section').forEach(function(s) { s.classList.remove('print-hidden'); });
+    document.querySelectorAll('tbody tr').forEach(function(r) { r.classList.remove('print-hidden-row'); });
+    titleEl.textContent = '';
+  }, 1000);
+}
+
 // \u2500\u2500\u2500 FILTERS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 `;
 
@@ -217,12 +348,17 @@ const scriptEnd   = html.lastIndexOf(SCRIPT_CLOSE);
 if (scriptStart !== -1 && scriptEnd !== -1) {
   // Extract the existing filter function body (everything from applyFilters onward)
   const existingScript = html.slice(scriptStart, scriptEnd + SCRIPT_CLOSE.length);
+  // Prefer preserving doPrint if already present, otherwise start from applyFilters
+  const printIdx  = existingScript.indexOf('function doPrint');
   const filterIdx = existingScript.indexOf('function applyFilters');
-  if (filterIdx !== -1) {
-    const filterBody = existingScript.slice(filterIdx, existingScript.lastIndexOf(SCRIPT_CLOSE));
-    const newScript = GITHUB_SCRIPT + filterBody + '\n' + SCRIPT_CLOSE;
+  const bodyStart = (printIdx !== -1) ? printIdx : filterIdx;
+  if (bodyStart !== -1) {
+    const filterBody = existingScript.slice(bodyStart, existingScript.lastIndexOf(SCRIPT_CLOSE));
+    // Strip old doPrint block if present (the new GITHUB_SCRIPT now contains it)
+    const strippedBody = filterBody.replace(/\/\/ ─+ PRINT ─+[\s\S]*?(?=\/\/ ─+ FILTERS|function applyFilters)/, '');
+    const newScript = GITHUB_SCRIPT + strippedBody + '\n' + SCRIPT_CLOSE;
     html = html.slice(0, scriptStart) + newScript + html.slice(scriptEnd + SCRIPT_CLOSE.length);
-    console.log('✅  Script block patched (AV_FILES_URL + deckHTML + injectDeckLinks + filters preserved)');
+    console.log('✅  Script block patched (AV_FILES_URL + deckHTML + injectDeckLinks + doPrint + filters preserved)');
   } else {
     console.warn('⚠  Could not find applyFilters — script block not patched');
   }
