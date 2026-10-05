@@ -69,9 +69,9 @@ const PRINT_MEDIA_REPLACE = `  @media print {
     .day-section { page-break-inside: avoid; margin-bottom: 18px; }
     .day-section.print-hidden { display: none !important; }
     tr.print-hidden-row { display: none !important; }
-    col.col-audio, col.col-deck,
-    thead th:nth-last-child(-n+2),
-    tbody td:nth-last-child(-n+2) { display: none !important; }
+    col.col-deck,
+    thead th:last-child,
+    tbody td:last-child { display: none !important; }
     .badge-redownload { animation: none !important; }
     a.btn-deck { color: #1e2761 !important; text-decoration: none !important; }
   }
