@@ -43,15 +43,14 @@
   tbody td:last-child { border-right: none; }
 
   /* COLUMN WIDTHS */
-  col.col-time   { width: 100px; }
-  col.col-room   { width: 120px; }
-  col.col-session { width: 190px; }
-  col.col-speaker { width: 150px; }
-  col.col-proj   { width: 100px; }
-  col.col-mic    { width: 150px; }
-  col.col-timer  { width: 65px; }
-  col.col-monitor { width: 140px; }
-  col.col-audio   { width: 90px; }
+  col.col-time   { width: 110px; }
+  col.col-room   { width: 130px; }
+  col.col-session { width: 200px; }
+  col.col-speaker { width: 160px; }
+  col.col-proj   { width: 110px; }
+  col.col-mic    { width: 160px; }
+  col.col-timer  { width: 70px; }
+  col.col-monitor { width: 150px; }
   col.col-deck    { width: 100px; }
 
   .time-cell { white-space: nowrap; color: #444; }
@@ -82,10 +81,6 @@
   /* MONITOR CELL */
   .monitor-cell { font-size: 11px; color: #444; }
 
-  /* AUDIO CELL */
-  .audio-cell { text-align: center; vertical-align: middle !important; }
-  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; white-space: nowrap; }
-
   /* DECK CELL */
   .deck-cell { text-align: center; vertical-align: middle !important; }
   .btn-deck { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; background: #1d4ed8; color: #fff; white-space: nowrap; }
@@ -97,6 +92,11 @@
   /* RE-DOWNLOAD BADGE */
   .badge-redownload { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #f97316; white-space: nowrap; animation: pulse-orange 1.4s ease-in-out infinite; }
   @keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+  /* AUDIO CELL */
+  col.col-audio { width: 90px; }
+  .audio-cell { text-align: center; vertical-align: middle !important; }
+  .badge-xlr { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; white-space: nowrap; }
 
   /* DECK BTNS */
   .deck-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -183,25 +183,6 @@
 
 <div id="deck-status" class="loading">Loading presentation decks from Box…</div>
 
-<!-- ⚡ ALWAYS-ON ASSETS (pinned, not affected by filters) -->
-<div class="always-on-panel">
-  <div class="always-on-header"><span>⚡</span> Always-On Assets</div>
-  <div class="always-on-row" id="ao-Holding Slide">
-    <div class="always-on-info">
-      <div class="always-on-title">Holding Slide</div>
-      <div class="always-on-desc">Shown before event start and during all breaks</div>
-    </div>
-    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
-  </div>
-  <div class="always-on-row" id="ao-Opening Video">
-    <div class="always-on-info">
-      <div class="always-on-title">Opening Video</div>
-      <div class="always-on-desc">Played at event start</div>
-    </div>
-    <div class="always-on-btn"><span class="deck-pending">Pending</span></div>
-  </div>
-</div>
-
 <div class="summary-bar">
   <span>Sessions visible: <strong id="count-visible">0</strong></span>
   <span>Requiring AV Team projection: <strong id="count-av">0</strong></span>
@@ -216,11 +197,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -233,7 +214,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Introduction to the ZDC"></td>
         <td class="deck-cell" data-session-key="Introduction to the ZDC"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -248,11 +228,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -265,7 +245,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Welcome &amp; Plan for the Week"></td>
         <td class="deck-cell" data-session-key="Welcome &amp; Plan for the Week"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -278,7 +257,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="AI on IBM Z: From Transactional Intelligence to Agentic Workflows"></td>
         <td class="deck-cell" data-session-key="AI on IBM Z: From Transactional Intelligence to Agentic Workflows"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -291,8 +269,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"></td>
-        <td class="deck-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Sancy" data-proj="Collaborative">
@@ -304,8 +281,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"></td>
-        <td class="deck-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 2" data-proj="Collaborative">
@@ -317,8 +293,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="AI-Powered Event Integration for IBM Z"></td>
-        <td class="deck-cell" data-session-key="AI-Powered Event Integration for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Florentine" data-proj="Collaborative">
@@ -330,8 +305,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"></td>
-        <td class="deck-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 3" data-proj="Collaborative">
@@ -343,8 +317,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Multiple Shared Pools"></td>
-        <td class="deck-cell" data-session-key="Multiple Shared Pools"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Hope" data-proj="Collaborative">
@@ -356,8 +329,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Intelligent Database Operations"></td>
-        <td class="deck-cell" data-session-key="Intelligent Database Operations"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 1" data-proj="Collaborative">
@@ -369,8 +341,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Signals to Action"></td>
-        <td class="deck-cell" data-session-key="From Signals to Action"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Cullinan" data-proj="Collaborative">
@@ -382,8 +353,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"></td>
-        <td class="deck-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Sancy" data-proj="Collaborative">
@@ -395,8 +365,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"></td>
-        <td class="deck-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 2" data-proj="Collaborative">
@@ -408,8 +377,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="AI-Powered Event Integration for IBM Z"></td>
-        <td class="deck-cell" data-session-key="AI-Powered Event Integration for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Florentine" data-proj="Collaborative">
@@ -421,8 +389,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"></td>
-        <td class="deck-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 3" data-proj="Collaborative">
@@ -434,8 +401,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Multiple Shared Pools"></td>
-        <td class="deck-cell" data-session-key="Multiple Shared Pools"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Hope" data-proj="Collaborative">
@@ -447,8 +413,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Intelligent Database Operations"></td>
-        <td class="deck-cell" data-session-key="Intelligent Database Operations"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Groenplaats 1" data-proj="Collaborative">
@@ -460,8 +425,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Signals to Action"></td>
-        <td class="deck-cell" data-session-key="From Signals to Action"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
@@ -473,7 +437,6 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15 min</span></td>
         <td class="monitor-cell">—</td>
-        <td class="audio-cell" data-session-key="Flex Time Kickoff"></td>
         <td class="deck-cell" data-session-key="Flex Time Kickoff"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -486,8 +449,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Generic Data Architecture, Data Discovery on Z"></td>
-        <td class="deck-cell" data-session-key="Generic Data Architecture, Data Discovery on Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Teun" data-proj="Presenter">
@@ -499,8 +461,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="The Frontier Model Era: Transforming the IBM Z Security Landscape"></td>
-        <td class="deck-cell" data-session-key="The Frontier Model Era: Transforming the IBM Z Security Landscape"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -512,8 +473,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="IBM Atlas: System Intelligence That Discovers Everything"></td>
-        <td class="deck-cell" data-session-key="IBM Atlas: System Intelligence That Discovers Everything"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -525,8 +485,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Would You Trust an AI Agent With This?"></td>
-        <td class="deck-cell" data-session-key="Would You Trust an AI Agent With This?"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -538,8 +497,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="IBM Vault Premium Package for z/OS: Native Certificate &amp; Secrets Management"></td>
-        <td class="deck-cell" data-session-key="IBM Vault Premium Package for z/OS: Native Certificate &amp; Secrets Management"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -551,8 +509,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Software Management-as-Code — IBM Z Install"></td>
-        <td class="deck-cell" data-session-key="Software Management-as-Code — IBM Z Install"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -564,8 +521,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="IBM Project Polaris Tech Preview 2.0 and Beyond"></td>
-        <td class="deck-cell" data-session-key="IBM Project Polaris Tech Preview 2.0 and Beyond"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -577,8 +533,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Workload Expansion: The Future of IBM Z and LinuxONE"></td>
-        <td class="deck-cell" data-session-key="Workload Expansion: The Future of IBM Z and LinuxONE"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -590,8 +545,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Client Configuration Data to Simplification Signals"></td>
-        <td class="deck-cell" data-session-key="From Client Configuration Data to Simplification Signals"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Monday" data-room="Ballroom Foyer" data-proj="Design Fair Station">
@@ -603,8 +557,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="What Is Your Mainframe Not Telling You?"></td>
-        <td class="deck-cell" data-session-key="What Is Your Mainframe Not Telling You?"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
     </tbody>
@@ -618,11 +571,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -635,7 +588,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Opening Keynote — Designing the Future of Computing"></td>
         <td class="deck-cell" data-session-key="Opening Keynote — Designing the Future of Computing"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -648,8 +600,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"></td>
-        <td class="deck-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Sancy" data-proj="Collaborative">
@@ -661,8 +612,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"></td>
-        <td class="deck-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 2" data-proj="Collaborative">
@@ -674,8 +624,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="AI-Powered Event Integration for IBM Z"></td>
-        <td class="deck-cell" data-session-key="AI-Powered Event Integration for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Florentine" data-proj="Collaborative">
@@ -687,8 +636,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"></td>
-        <td class="deck-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 3" data-proj="Collaborative">
@@ -700,8 +648,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Multiple Shared Pools"></td>
-        <td class="deck-cell" data-session-key="Multiple Shared Pools"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Hope" data-proj="Collaborative">
@@ -713,8 +660,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Intelligent Database Operations"></td>
-        <td class="deck-cell" data-session-key="Intelligent Database Operations"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 1" data-proj="Collaborative">
@@ -726,8 +672,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Signals to Action"></td>
-        <td class="deck-cell" data-session-key="From Signals to Action"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Cullinan" data-proj="Collaborative">
@@ -739,8 +684,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"></td>
-        <td class="deck-cell" data-session-key="Atlas for IBM Z: Discover Everything, Predict and Prevent Issues"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Sancy" data-proj="Collaborative">
@@ -752,8 +696,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"></td>
-        <td class="deck-cell" data-session-key="From Analysis to Action: SDLC with IBM Bob Premium Package for Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 2" data-proj="Collaborative">
@@ -765,8 +708,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="AI-Powered Event Integration for IBM Z"></td>
-        <td class="deck-cell" data-session-key="AI-Powered Event Integration for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Florentine" data-proj="Collaborative">
@@ -778,8 +720,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"></td>
-        <td class="deck-cell" data-session-key="Fit for Purpose Agentic AI for IBM Z"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 3" data-proj="Collaborative">
@@ -791,8 +732,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Multiple Shared Pools"></td>
-        <td class="deck-cell" data-session-key="Multiple Shared Pools"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Hope" data-proj="Collaborative">
@@ -804,8 +744,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Intelligent Database Operations"></td>
-        <td class="deck-cell" data-session-key="Intelligent Database Operations"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Groenplaats 1" data-proj="Collaborative">
@@ -817,8 +756,7 @@
         <td><span class="dash">—</span></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="From Signals to Action"></td>
-        <td class="deck-cell" data-session-key="From Signals to Action"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Tuesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
@@ -830,7 +768,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Continuing IBM Z Full-Stack Simplification"></td>
         <td class="deck-cell" data-session-key="Continuing IBM Z Full-Stack Simplification"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -843,7 +780,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Reimagining Mainframe Engineering Across the Stack"></td>
         <td class="deck-cell" data-session-key="Reimagining Mainframe Engineering Across the Stack"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -858,11 +794,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -875,7 +811,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">3 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Managing my Db2 &amp; IMS Systems with Z Database Assistant"></td>
         <td class="deck-cell" data-session-key="Managing my Db2 &amp; IMS Systems with Z Database Assistant"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -886,9 +821,8 @@
         <td class="speaker-cell">Elianne Bravo, Anthony Cocuzza</td>
         <td><span class="badge badge-av">AV Team</span></td>
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
-        <td><span class="timer-chip">Yes</span></td>
+        <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion"></td>
         <td class="deck-cell" data-session-key="The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -901,7 +835,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Project Polaris Roadmap: Leading to the z/OS Next GA Experience"></td>
         <td class="deck-cell" data-session-key="Project Polaris Roadmap: Leading to the z/OS Next GA Experience"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -914,8 +847,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS"></td>
-        <td class="deck-cell" data-session-key="Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Sancy" data-proj="Presenter">
@@ -927,8 +859,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Z Database Assistant Update and Journey"></td>
-        <td class="deck-cell" data-session-key="Z Database Assistant Update and Journey"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Tiffany/Shah" data-proj="Presenter">
@@ -940,8 +871,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Part 1: IBM Z Security Transformation"></td>
-        <td class="deck-cell" data-session-key="Part 1: IBM Z Security Transformation"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
@@ -953,7 +883,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">60 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="The Geometry of Intelligence"></td>
         <td class="deck-cell" data-session-key="The Geometry of Intelligence"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -966,7 +895,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Expedite Problem Diagnosis in Z Operations"></td>
         <td class="deck-cell" data-session-key="Expedite Problem Diagnosis in Z Operations"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -979,8 +907,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Unlocking IBM Z Data for AI and Real-Time Decisioning"></td>
-        <td class="deck-cell" data-session-key="Unlocking IBM Z Data for AI and Real-Time Decisioning"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Teun" data-proj="Presenter">
@@ -992,8 +919,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">2 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Advancing Agentic AI Governance with Security, Traceability, and Transparency"></td>
-        <td class="deck-cell" data-session-key="Advancing Agentic AI Governance with Security, Traceability, and Transparency"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Tiffany/Shah" data-proj="Presenter">
@@ -1005,8 +931,7 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">Presentation display with HDMI connection</td>
-        <td class="audio-cell" data-session-key="Part 2: New Product Innovation in IBM Z Security SW"></td>
-        <td class="deck-cell" data-session-key="Part 2: New Product Innovation in IBM Z Security SW"><span class="deck-pending">Pending</span></td>
+        <td class="deck-cell"><span class="deck-na">—</span></td>
       </tr>
 
       <tr data-day="Wednesday" data-room="Belle Epoque Ballroom" data-proj="AV Team">
@@ -1018,7 +943,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span></div></td>
         <td><span class="timer-chip">45 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Agentic Management of Infrastructure Resources in a Sovereign Compute Environment"></td>
         <td class="deck-cell" data-session-key="Agentic Management of Infrastructure Resources in a Sovereign Compute Environment"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1033,11 +957,11 @@
     <colgroup>
       <col class="col-time"><col class="col-room"><col class="col-session">
       <col class="col-speaker"><col class="col-proj"><col class="col-mic">
-      <col class="col-timer"><col class="col-monitor"><col class="col-audio"><col class="col-deck">
+      <col class="col-timer"><col class="col-monitor"><col class="col-deck">
     </colgroup>
     <thead><tr>
       <th>Time</th><th>Room</th><th>Session</th><th>Speaker(s)</th>
-      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Audio</th><th>Deck</th>
+      <th>Projection</th><th>Microphones</th><th>Timer</th><th>Monitor / Display</th><th>Deck</th>
     </tr></thead>
     <tbody>
 
@@ -1050,7 +974,6 @@
         <td><div class="mic-pills"><span class="pill pill-headset">1 Headset</span><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">30 min</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="How IBM Bob Is Changing the Game for Mainframe Developers"></td>
         <td class="deck-cell" data-session-key="How IBM Bob Is Changing the Game for Mainframe Developers"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1063,7 +986,6 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15x4</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Collaborative Session Playbacks (Round 1)"></td>
         <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 1)"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1076,7 +998,6 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">4 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="timer-chip">15x4</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Collaborative Session Playbacks (Round 2)"></td>
         <td class="deck-cell" data-session-key="Collaborative Session Playbacks (Round 2)"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1089,7 +1010,6 @@
         <td><div class="mic-pills"><span class="pill pill-handheld">2 Handheld</span><span class="pill pill-catchbox">3 Catchbox</span></div></td>
         <td><span class="dash">—</span></td>
         <td class="monitor-cell">LED wall display, Confidence display</td>
-        <td class="audio-cell" data-session-key="Final Wrap-Up"></td>
         <td class="deck-cell" data-session-key="Final Wrap-Up"><span class="deck-pending">Pending</span></td>
       </tr>
 
@@ -1099,7 +1019,7 @@
 
 </div><!-- /content -->
 
-<footer>ZDC 2026 Fall — AV Dashboard — Generated by IBM Bob &nbsp;·&nbsp; October 2, 2026</footer>
+<footer>ZDC 2026 Fall — AV Dashboard — Generated by IBM Bob &nbsp;·&nbsp; October 5, 2026</footer>
 
 <script>
 // ─── Live deck links from GitHub (av-files.json) ──────────────────────────────────────────
@@ -1124,8 +1044,7 @@ function injectDeckLinks(sessions, alwaysOn) {
     var key = cell.getAttribute('data-session-key');
     var tmp = document.createElement('textarea');
     tmp.innerHTML = key;
-    var decodedKey = tmp.value;
-    var entry = sessions[decodedKey];
+    var entry = sessions[tmp.value];
     cell.innerHTML = deckHTML(entry);
   });
   // Audio cells — show XLR Feed badge when xlr_feed is true, blank otherwise
@@ -1133,16 +1052,15 @@ function injectDeckLinks(sessions, alwaysOn) {
     var key = cell.getAttribute('data-session-key');
     var tmp = document.createElement('textarea');
     tmp.innerHTML = key;
-    var decodedKey = tmp.value;
-    var entry = sessions[decodedKey];
+    var entry = sessions[tmp.value];
     cell.innerHTML = (entry && entry.xlr_feed) ? '<span class="badge-xlr">&#127908; XLR Feed</span>' : '';
   });
   // Always-On panel
   var aoAssets = alwaysOn || {};
   Object.keys(aoAssets).forEach(function(key) {
-    var aoRow = document.getElementById('ao-' + key);
-    if (!aoRow) return;
-    var btnDiv = aoRow.querySelector('.always-on-btn');
+    var row = document.getElementById('ao-' + key);
+    if (!row) return;
+    var btnDiv = row.querySelector('.always-on-btn');
     if (btnDiv) btnDiv.innerHTML = deckHTML(aoAssets[key]);
   });
 }
