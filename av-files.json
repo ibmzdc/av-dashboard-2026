@@ -49,6 +49,13 @@
       "xlr_feed": false,
       "label": "Opening Video",
       "description": "Played at event start"
+    },
+    "Closing Video": {
+      "url": "",
+      "redownload": false,
+      "xlr_feed": false,
+      "label": "Closing Video",
+      "description": "Played at event close"
     }
   },
   "sessions": {
