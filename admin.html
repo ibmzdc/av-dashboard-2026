@@ -30,7 +30,7 @@
   .forget-link:hover { background: #fef2f2; }
 
   /* MAIN */
-  .main { max-width: 960px; margin: 24px auto; padding: 0 20px 60px; }
+  .main { max-width: 1400px; margin: 24px auto; padding: 0 20px 60px; }
 
   /* STATUS BAR */
   #status-bar { padding: 10px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; display: none; }
@@ -415,6 +415,7 @@ function renderAlwaysOn(assets) {
 function renderSessions(sessions) {
   var container = document.getElementById('sessions-container');
   container.innerHTML = '';
+  var slotRows = {};
 
   var byDay = {};
   DAY_ORDER.forEach(function(d) { byDay[d] = []; });
@@ -437,7 +438,24 @@ function renderSessions(sessions) {
     label.textContent = day;
     group.appendChild(label);
 
-    keys.forEach(function(key) {
+    // One row per time slot (a session that repeats shows once per slot), sorted by start time
+    function startMins(str) {
+      var m = /(\d{1,2}):(\d{2})\s*(am|pm)/i.exec(str || '');
+      if (!m) return 99999;
+      return ((parseInt(m[1], 10) % 12) + (m[3].toLowerCase() === 'pm' ? 12 : 0)) * 60 + parseInt(m[2], 10);
+    }
+    var entries = [];
+    keys.forEach(function(key, order) {
+      var slots = (sessions[key].time || '').split(' / ').filter(function(x){ return x.trim(); });
+      if (!slots.length) slots = [''];
+      slots.forEach(function(slot, si) {
+        entries.push({ key: key, time: slot.trim(), slot: si, order: order, mins: startMins(slot) });
+      });
+    });
+    entries.sort(function(a, b) { return (a.mins - b.mins) || (a.order - b.order) || (a.slot - b.slot); });
+
+    entries.forEach(function(en) {
+      var key = en.key;
       var s = sessions[key];
       var hasUrl = s.url && s.url.trim() !== '';
       var isRedownload = !!s.redownload;
@@ -476,6 +494,7 @@ function renderSessions(sessions) {
         var filled = this.value.trim() !== '';
         this.classList.toggle('has-url', filled);
         icon.textContent = filled ? '✅' : '⏳';
+        syncSlots();
         markDirty();
       });
       urlWrap.appendChild(input);
@@ -484,7 +503,7 @@ function renderSessions(sessions) {
       var rdWrap = document.createElement('div');
       rdWrap.className = 'redownload-wrap';
 
-      var toggleId = 'rd-' + key.replace(/[^a-z0-9]/gi, '_');
+      var toggleId = 'rd-' + key.replace(/[^a-z0-9]/gi, '_') + '-' + en.slot;
 
       var lbl = document.createElement('label');
       lbl.className = 'toggle-label' + (isRedownload ? ' active' : '');
@@ -505,6 +524,7 @@ function renderSessions(sessions) {
         lbl.textContent = on ? '🔄 Re-download!' : 'Re-download?';
         lbl.className = 'toggle-label' + (on ? ' active' : '');
         row.className = 'session-row' + (on ? ' redownload-on' : '') + (xlrChk.checked ? ' xlr-on' : '');
+        syncSlots();
         markDirty();
       });
 
@@ -520,7 +540,7 @@ function renderSessions(sessions) {
       var xlrWrap = document.createElement('div');
       xlrWrap.className = 'xlr-wrap';
 
-      var xlrToggleId = 'xlr-' + key.replace(/[^a-z0-9]/gi, '_');
+      var xlrToggleId = 'xlr-' + key.replace(/[^a-z0-9]/gi, '_') + '-' + en.slot;
 
       var xlrLbl = document.createElement('label');
       xlrLbl.className = 'toggle-label' + (isXlr ? ' xlr-active' : '');
@@ -541,6 +561,7 @@ function renderSessions(sessions) {
         xlrLbl.textContent = on ? '🎙 XLR On!' : 'XLR Feed?';
         xlrLbl.className = 'toggle-label' + (on ? ' xlr-active' : '');
         row.className = 'session-row' + (chk.checked ? ' redownload-on' : '') + (on ? ' xlr-on' : '');
+        syncSlots();
         markDirty();
       });
 
@@ -554,7 +575,7 @@ function renderSessions(sessions) {
 
       var timeCol = document.createElement('div');
       timeCol.className = 'session-time';
-      timeCol.textContent = (s.time || '').split(' / ').join('\n');
+      timeCol.textContent = en.time;
 
       row.appendChild(icon);
       row.appendChild(timeCol);
@@ -562,6 +583,26 @@ function renderSessions(sessions) {
       row.appendChild(urlWrap);
       row.appendChild(rdWrap);
       row.appendChild(xlrWrap);
+
+      // Copy this row's values to the other time-slot rows of the same session
+      row.setState = function(url, rd, xlr) {
+        input.value = url;
+        input.classList.toggle('has-url', url.trim() !== '');
+        icon.textContent = url.trim() !== '' ? '✅' : '⏳';
+        chk.checked = rd;
+        lbl.textContent = rd ? '🔄 Re-download!' : 'Re-download?';
+        lbl.className = 'toggle-label' + (rd ? ' active' : '');
+        xlrChk.checked = xlr;
+        xlrLbl.textContent = xlr ? '🎙 XLR On!' : 'XLR Feed?';
+        xlrLbl.className = 'toggle-label' + (xlr ? ' xlr-active' : '');
+        row.className = 'session-row' + (rd ? ' redownload-on' : '') + (xlr ? ' xlr-on' : '');
+      };
+      function syncSlots() {
+        (slotRows[key] || []).forEach(function(r) {
+          if (r !== row) r.setState(input.value, chk.checked, xlrChk.checked);
+        });
+      }
+      (slotRows[key] = slotRows[key] || []).push(row);
       group.appendChild(row);
     });
 
