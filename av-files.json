@@ -67,7 +67,8 @@
       "day": "Sunday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "4:00pm → 5:00pm"
     },
     "Welcome & Plan for the Week": {
       "url": "",
@@ -77,7 +78,8 @@
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "8:30am → 9:00am"
     },
     "AI on IBM Z: From Transactional Intelligence to Agentic Workflows": {
       "url": "",
@@ -87,7 +89,8 @@
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "9:00am → 9:30am"
     },
     "Atlas for IBM Z: Discover Everything, Predict and Prevent Issues": {
       "url": "",
@@ -97,7 +100,8 @@
       "day": "Monday",
       "room": "Cullinan",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "From Analysis to Action: SDLC with IBM Bob Premium Package for Z": {
       "url": "",
@@ -107,7 +111,8 @@
       "day": "Monday",
       "room": "Sancy",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "AI-Powered Event Integration for IBM Z": {
       "url": "",
@@ -117,7 +122,8 @@
       "day": "Monday",
       "room": "Groenplaats 2",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "Fit for Purpose Agentic AI for IBM Z": {
       "url": "",
@@ -127,7 +133,8 @@
       "day": "Monday",
       "room": "Florentine",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "Multiple Shared Pools": {
       "url": "",
@@ -137,7 +144,8 @@
       "day": "Monday",
       "room": "Groenplaats 3",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "Intelligent Database Operations": {
       "url": "",
@@ -147,7 +155,8 @@
       "day": "Monday",
       "room": "Hope",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "From Signals to Action": {
       "url": "",
@@ -157,7 +166,8 @@
       "day": "Monday",
       "room": "Groenplaats 1",
       "session_type": "Collaborative Session",
-      "proj_type": "Collaborative"
+      "proj_type": "Collaborative",
+      "time": "10:00am → 12:00pm / 1:30pm → 3:30pm"
     },
     "Flex Time Kickoff": {
       "url": "",
@@ -167,7 +177,8 @@
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "4:00pm → 4:15pm"
     },
     "Generic Data Architecture, Data Discovery on Z": {
       "url": "",
@@ -177,7 +188,8 @@
       "day": "Monday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Client Roundtable",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "4:15pm → 5:00pm"
     },
     "The Frontier Model Era: Transforming the IBM Z Security Landscape": {
       "url": "",
@@ -187,7 +199,8 @@
       "day": "Monday",
       "room": "Teun",
       "session_type": "Client Roundtable",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "4:15pm → 5:00pm"
     },
     "IBM Atlas: System Intelligence That Discovers Everything": {
       "url": "",
@@ -197,7 +210,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "Would You Trust an AI Agent With This?": {
       "url": "",
@@ -207,7 +221,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "IBM Vault Premium Package for z/OS: Native Certificate & Secrets Management": {
       "url": "",
@@ -217,7 +232,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "Software Management-as-Code ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ IBM Z Install": {
       "url": "",
@@ -227,7 +243,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "IBM Project Polaris Tech Preview 2.0 and Beyond": {
       "url": "",
@@ -237,7 +254,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "Workload Expansion: The Future of IBM Z and LinuxONE": {
       "url": "",
@@ -247,7 +265,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "From Client Configuration Data to Simplification Signals": {
       "url": "",
@@ -257,7 +276,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "What Is Your Mainframe Not Telling You?": {
       "url": "",
@@ -267,7 +287,8 @@
       "day": "Monday",
       "room": "Ballroom Foyer",
       "session_type": "Z Design Fair",
-      "proj_type": "Design Fair Station"
+      "proj_type": "Design Fair Station",
+      "time": "4:15pm → 7:00pm"
     },
     "Opening Keynote ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Designing the Future of Computing": {
       "url": "",
@@ -277,7 +298,8 @@
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "8:30am → 9:30am"
     },
     "Continuing IBM Z Full-Stack Simplification": {
       "url": "",
@@ -287,7 +309,8 @@
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Solution Review",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "4:00pm → 5:00pm"
     },
     "Reimagining Mainframe Engineering Across the Stack": {
       "url": "",
@@ -297,7 +320,8 @@
       "day": "Tuesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Client Experience",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "5:00pm → 5:45pm"
     },
     "Managing my Db2 & IMS Systems with Z Database Assistant": {
       "url": "",
@@ -307,7 +331,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Client Experience",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "9:30am → 10:30am"
     },
     "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
       "url": "",
@@ -317,7 +342,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "11:00am → 12:00pm"
     },
     "Project Polaris Roadmap: Leading to the z/OS Next GA Experience": {
       "url": "",
@@ -327,7 +353,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Solution Review",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "1:30pm → 2:15pm"
     },
     "Streamlining COBOL Modernization with IBM COBOL Elevate for z/OS": {
       "url": "",
@@ -337,7 +364,8 @@
       "day": "Wednesday",
       "room": "Teun",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "1:30pm → 2:15pm"
     },
     "Z Database Assistant Update and Journey": {
       "url": "",
@@ -347,7 +375,8 @@
       "day": "Wednesday",
       "room": "Sancy",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "1:30pm → 2:15pm"
     },
     "Part 1: IBM Z Security Transformation": {
       "url": "",
@@ -357,7 +386,8 @@
       "day": "Wednesday",
       "room": "Tiffany/Shah",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "1:30pm → 2:15pm"
     },
     "The Geometry of Intelligence": {
       "url": "",
@@ -367,7 +397,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "2:30pm → 3:30pm"
     },
     "Expedite Problem Diagnosis in Z Operations": {
       "url": "",
@@ -377,7 +408,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Solution Review",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "4:00pm → 4:45pm"
     },
     "Unlocking IBM Z Data for AI and Real-Time Decisioning": {
       "url": "",
@@ -387,7 +419,8 @@
       "day": "Wednesday",
       "room": "Sancy",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "4:00pm → 4:45pm"
     },
     "Advancing Agentic AI Governance with Security, Traceability, and Transparency": {
       "url": "",
@@ -397,7 +430,8 @@
       "day": "Wednesday",
       "room": "Teun",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "4:00pm → 4:45pm"
     },
     "Part 2: New Product Innovation in IBM Z Security SW": {
       "url": "",
@@ -407,7 +441,8 @@
       "day": "Wednesday",
       "room": "Tiffany/Shah",
       "session_type": "Solution Review",
-      "proj_type": "Presenter"
+      "proj_type": "Presenter",
+      "time": "4:00pm → 4:45pm"
     },
     "Agentic Management of Infrastructure Resources in a Sovereign Compute Environment": {
       "url": "",
@@ -417,7 +452,8 @@
       "day": "Wednesday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Solution Review",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "5:00pm → 5:45pm"
     },
     "How IBM Bob Is Changing the Game for Mainframe Developers": {
       "url": "",
@@ -427,7 +463,8 @@
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "8:30am → 9:00am"
     },
     "Collaborative Session Playbacks (Round 1)": {
       "url": "",
@@ -437,7 +474,8 @@
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Collaborative Session Playbacks",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "9:00am → 10:00am"
     },
     "Collaborative Session Playbacks (Round 2)": {
       "url": "",
@@ -447,7 +485,8 @@
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
       "session_type": "Collaborative Session Playbacks",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "10:30am → 11:30am"
     },
     "Final Wrap-Up": {
       "url": "",
@@ -457,7 +496,41 @@
       "day": "Thursday",
       "room": "Belle Epoque Ballroom",
       "session_type": "General Session",
-      "proj_type": "AV Team"
+      "proj_type": "AV Team",
+      "time": "11:30am → 12:00pm"
+    },
+    "Out-of-the-box-AI": {
+      "url": "",
+      "redownload": false,
+      "xlr_feed": true,
+      "label": "Out-of-the-box-AI",
+      "day": "Wednesday",
+      "room": "Sancy",
+      "session_type": "Solution Review",
+      "proj_type": "Presenter",
+      "time": "5:00pm → 5:45pm"
+    },
+    "Bringing agentic workflows to CI/CD with IBM Pipeline Automation for Z to accelerate how apps are built, validated, and deployed": {
+      "url": "",
+      "redownload": false,
+      "xlr_feed": true,
+      "label": "Bringing agentic workflows to CI/CD with IBM Pipeline Automation for Z to accelerate how apps are built, validated, and deployed",
+      "day": "Wednesday",
+      "room": "Teun",
+      "session_type": "Solution Review",
+      "proj_type": "Presenter",
+      "time": "5:00pm → 5:45pm"
+    },
+    "Agentic Security": {
+      "url": "",
+      "redownload": false,
+      "xlr_feed": true,
+      "label": "Agentic Security",
+      "day": "Wednesday",
+      "room": "Tiffany/Shah",
+      "session_type": "Solution Review",
+      "proj_type": "Presenter",
+      "time": "5:00pm → 5:45pm"
     }
   }
 }
