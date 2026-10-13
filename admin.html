@@ -49,7 +49,7 @@
   .session-row:hover { background: #f7f8ff; }
   .session-row.redownload-on { background: #fff8f0; border-left: 3px solid #f97316; }
   .session-row.xlr-on { border-right: 3px solid #991b1b; }
-  .session-time { flex: 0 0 150px; font-size: 12px; font-weight: 600; color: #444; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .session-time { flex: 0 0 150px; font-size: 12px; font-weight: 600; color: #444; font-variant-numeric: tabular-nums; white-space: pre-line; }
   .session-info { flex: 1.6; min-width: 0; }
   .session-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .session-meta { font-size: 10px; color: #888; margin-top: 2px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
@@ -231,7 +231,7 @@ function loadData() {
     })
     .then(function(meta) {
       fileSha = meta.sha;
-      var content = atob(meta.content.replace(/\n/g,''));
+      var content = new TextDecoder('utf-8').decode(Uint8Array.from(atob(meta.content.replace(/\n/g,'')), function(c){ return c.charCodeAt(0); }));
       jsonData = JSON.parse(content);
       renderDownloadAll(jsonData.download_all || {});
       renderAlwaysOn(jsonData.always_on || {});
@@ -554,7 +554,7 @@ function renderSessions(sessions) {
 
       var timeCol = document.createElement('div');
       timeCol.className = 'session-time';
-      timeCol.textContent = s.time || '';
+      timeCol.textContent = (s.time || '').split(' / ').join('\n');
 
       row.appendChild(icon);
       row.appendChild(timeCol);
