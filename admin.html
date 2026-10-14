@@ -55,6 +55,13 @@
   .session-meta { font-size: 10px; color: #888; margin-top: 2px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .meta-room { color: #1e2761; font-weight: 600; }
   .meta-type { color: #555; }
+  .session-proj { flex: 0 0 130px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-av     { background: #dbeafe; color: #1d4ed8; }
+  .badge-pres   { background: #dcfce7; color: #166534; }
+  .badge-collab { background: #fef3c7; color: #92400e; }
+  .badge-fair   { background: #f3e8ff; color: #6b21a8; }
+  .badge-other  { background: #f1f5f9; color: #475569; }
   .url-input { flex: 2; min-width: 0; }
   .url-input input { width: 100%; padding: 7px 10px; border: 1px solid #c8d0e0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #1a1a2e; background: #f9fafb; }
   .url-input input:focus { outline: 2px solid #3b82d4; outline-offset: 1px; background: #fff; }
@@ -577,9 +584,22 @@ function renderSessions(sessions) {
       timeCol.className = 'session-time';
       timeCol.textContent = en.time;
 
+      var projCol = document.createElement('div');
+      projCol.className = 'session-proj';
+      if (s.proj_type) {
+        var pt = s.proj_type.toLowerCase();
+        var badgeCls = pt.indexOf('av team') !== -1 ? 'badge-av'
+                     : pt.indexOf('presenter') !== -1 ? 'badge-pres'
+                     : pt.indexOf('collaborative') !== -1 ? 'badge-collab'
+                     : pt.indexOf('design fair') !== -1 ? 'badge-fair'
+                     : 'badge-other';
+        projCol.innerHTML = '<span class="badge ' + badgeCls + '">' + escHtml(s.proj_type) + '</span>';
+      }
+
       row.appendChild(icon);
       row.appendChild(timeCol);
       row.appendChild(info);
+      row.appendChild(projCol);
       row.appendChild(urlWrap);
       row.appendChild(rdWrap);
       row.appendChild(xlrWrap);
