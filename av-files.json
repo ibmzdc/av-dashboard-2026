@@ -30,7 +30,7 @@
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
   "_version": "1.5",
-  "_updated": "2026-10-12",
+  "_updated": "2026-10-14",
   "download_all": {
     "url": "https://ibm.box.com/s/1ycueokiqjki1obaytp101qfrlnmunqx",
     "label": "Download All Decks"
@@ -170,7 +170,7 @@
       "time": "10:00am - 12:00pm / 1:30pm - 3:30pm"
     },
     "Flex Time Kickoff": {
-      "url": "",
+      "url": "https://ibm.box.com/s/op3bywo7n0klcobj0g1x5wzogk75jlz8",
       "redownload": false,
       "xlr_feed": false,
       "label": "Flex Time Kickoff",
