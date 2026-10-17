@@ -30,7 +30,7 @@
     "Repo:          https://github.com/ibmzdc/av-dashboard-2026"
   ],
   "_version": "1.5",
-  "_updated": "2026-10-14",
+  "_updated": "2026-10-17",
   "download_all": {
     "url": "https://ibm.box.com/s/1ycueokiqjki1obaytp101qfrlnmunqx",
     "label": "Download All Decks"
@@ -335,7 +335,7 @@
       "time": "9:30am - 10:30am"
     },
     "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion": {
-      "url": "",
+      "url": "https://ibm.ent.box.com/file/2532678054897",
       "redownload": false,
       "xlr_feed": true,
       "label": "The Future of IBM Z and LinuxONE: Security Simplification and Workload Expansion",
